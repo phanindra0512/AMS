@@ -3,13 +3,7 @@ import {View, Text, StyleSheet, Dimensions} from 'react-native';
 
 import {Home, Transactions, Profile, ServiceHub} from '../../../../assets/svg';
 import Octicons from 'react-native-vector-icons';
-
-const icons = {
-  Home,
-  Transactions,
-  Profile,
-  ServiceHub,
-};
+import {icons} from '../constants';
 
 type PropTypes = {
   icon: keyof typeof icons;
@@ -24,11 +18,10 @@ const TAB_COUNT = 2;
 const MIN_TAB_WIDTH = SCREEN_WIDTH / TAB_COUNT;
 
 const TabBarIcon = ({icon, focused, color, size, label}: PropTypes) => {
-  const Icon = icons[icon];
-
+  const IconComponent = focused ? icons[icon].filled : icons[icon].outlined;
   return (
     <View style={styles.container}>
-      <Icon fill={color} width={size} height={size} />
+      <IconComponent fill={color} width={size} height={size} />
       <Text
         style={[
           styles.label,
@@ -58,7 +51,7 @@ const styles = StyleSheet.create({
     color: '#636B2F',
   },
   defaultText: {
-    color: '#CCC',
+    color: '#999',
   },
 });
 

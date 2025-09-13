@@ -9,7 +9,7 @@ export const HeaderContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 20px;
+  margin: 16px;
 `;
 export const HeaderText = styled.Text`
   font-size: 20px;

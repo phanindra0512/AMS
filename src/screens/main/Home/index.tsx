@@ -40,8 +40,8 @@ const Home = ({navigation}: any) => {
       case 'View Collection':
         navigation.navigate('ViewCollection');
         break;
-      case 'Add Expense':
-        navigation.navigate('AddExpense');
+      case 'View Expenses':
+        navigation.navigate('ViewExpense');
         break;
       case 'Pay Maintenance':
         navigation.navigate('PayMaintenance');

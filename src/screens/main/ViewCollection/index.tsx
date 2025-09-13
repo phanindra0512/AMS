@@ -1,7 +1,12 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {Header} from '../../../components';
-import {CalendarContainer, CalendarText, HeaderText} from './styles';
+import {
+  CalendarContainer,
+  CalendarText,
+  HeaderText,
+  TreasurerText,
+} from './styles';
 import {Calendar, Dropdown} from '../../../assets/svg';
 import CollectionStatus from './components/CollectionStatus';
 import Transactions from './components/Transaction';
@@ -23,9 +28,12 @@ const ViewCollection = ({navigation}: any) => {
       </Header>
 
       <CalendarContainer onPress={showModal}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Calendar />
-          <CalendarText>Collection of month - {selectedMonth}</CalendarText>
+          <View>
+            <CalendarText>Collection of month - {selectedMonth}</CalendarText>
+            <TreasurerText>Treasurer : Raju, 201</TreasurerText>
+          </View>
         </View>
         <Dropdown />
       </CalendarContainer>

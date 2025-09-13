@@ -6,7 +6,7 @@ export const SERVICES = [
   },
   {
     id: '2',
-    name: 'Add Expense',
+    name: 'View Expenses',
     image: require('../assets/images/addExpense.png'),
   },
   {

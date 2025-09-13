@@ -12,7 +12,7 @@ export const CalendarContainer = styled.Pressable`
   border-width: 1px;
   border-color: #e0e0e0;
   padding: 12px;
-  margin-horizontal: 20px;
+  margin-horizontal: 16px;
   border-radius: 8px;
   margin-top: 16px;
 `;
@@ -21,6 +21,13 @@ export const CalendarText = styled.Text`
   font-family: JosefinSans-Bold;
   color: #000000;
   line-height: 24px;
+  padding-left: 8px;
+`;
+export const TreasurerText = styled.Text`
+  font-size: 12px;
+  font-family: JosefinSans-Regular;
+  color: #343434;
+  line-height: 12px;
   padding-left: 8px;
 `;
 export const BackgroundContainer = styled.View`
@@ -110,28 +117,22 @@ export const StatusText = styled.Text`
 export const CardContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  padding: 8px 20px;
+  padding: 8px 16px;
   background-color: #ffffff;
   border-bottom-width: 1px;
   border-color: #cccccc;
 `;
 export const Avatar = styled.View`
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 24px;
-  background-color: #8f9854;
+  background-color: #ffffff;
   align-items: center;
   justify-content: center;
   margin-right: 12px;
+  border-width: 1px;
+  border-color: #e0e0e0;
 `;
-export const AvatarText = styled.Text`
-  font-size: 20px;
-  line-height: 20px;
-  font-family: JosefinSans-Bold;
-  color: #ffffff;
-  padding-top: 4px;
-`;
-
 export const Content = styled.View`
   flex: 1;
 `;
@@ -139,7 +140,7 @@ export const Content = styled.View`
 export const NameText = styled.Text`
   font-size: 14px;
   line-height: 18px;
-  font-family: JosefinSans-Bold;
+  font-family: JosefinSans-SemiBold;
 `;
 
 export const DateText = styled.Text`
@@ -161,7 +162,7 @@ export const AmountTextNew = styled.Text`
 
 export const StatusBadge = styled.View<{color: string}>`
   background-color: ${({color}) => color};
-  padding: 8px;
+  padding: 6px;
   border-radius: 6px;
   margin-top: 6px;
   min-width: 70px;
@@ -170,9 +171,9 @@ export const StatusBadge = styled.View<{color: string}>`
 `;
 
 export const StatusTextNew = styled.Text`
-  font-size: 12px;
+  font-size: 10px;
   line-height: 12px;
-  font-family: JosefinSans-Bold;
+  font-family: JosefinSans-SemiBold;
   color: #fff;
 `;
 

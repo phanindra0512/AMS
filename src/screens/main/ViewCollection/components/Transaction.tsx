@@ -3,7 +3,6 @@ import {Text, View, StyleSheet} from 'react-native';
 import {
   CardContainer,
   Avatar,
-  AvatarText,
   Content,
   NameText,
   DateText,
@@ -12,17 +11,18 @@ import {
   StatusBadge,
   StatusTextNew,
 } from '../styles';
+import {TransactionIcon} from '../../../../assets/svg';
 
 const Transactions = () => {
   return (
     <View>
       <CardContainer>
         <Avatar>
-          <AvatarText>P</AvatarText>
+          <TransactionIcon />
         </Avatar>
         <Content>
           <NameText>Phani, Flat No : 201</NameText>
-          <DateText>Date : 25-Jun-2025</DateText>
+          <DateText>25th Jun, 2025</DateText>
         </Content>
         <RightSection>
           <AmountTextNew>₹ 1000</AmountTextNew>
@@ -32,13 +32,14 @@ const Transactions = () => {
         </RightSection>
       </CardContainer>
 
+      {/* Second transaction */}
       <CardContainer>
         <Avatar>
-          <AvatarText>P</AvatarText>
+          <TransactionIcon />
         </Avatar>
         <Content>
           <NameText>Phani, Flat No : 201</NameText>
-          <DateText>Date : 25-Jun-2025</DateText>
+          <DateText>25th Jun, 2025</DateText>
         </Content>
         <RightSection>
           <AmountTextNew>₹ 1000</AmountTextNew>

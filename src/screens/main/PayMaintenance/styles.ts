@@ -8,14 +8,14 @@ export const HeaderText = styled.Text`
 export const Container = styled.ScrollView`
   background-color: #f8f8f8;
   flex: 1;
-  padding-horizontal: 24px;
+  padding-horizontal: 20px;
 `;
 
 export const SectionCard = styled.View`
   background-color: #fff;
   border-radius: 10px;
   padding-horizontal: 16px;
-  padding-vertical: 14px;
+  padding-vertical: 8px;
   margin-bottom: 16px;
   elevation: 1;
   margin-vertical: 12px;
@@ -46,7 +46,9 @@ export const InfoText = styled.Text`
   font-family: JosefinSans-Medium;
   padding-left: 4px;
 `;
-
+export const InfoDetailsText = styled(InfoText)`
+  color: #747476;
+`;
 export const Label = styled.Text`
   font-size: 12px;
   color: #747476;
@@ -54,14 +56,6 @@ export const Label = styled.Text`
   font-family: JosefinSans-Regular;
 `;
 
-export const FieldView = styled.View`
-  background-color: #fdfdfd;
-  border: 1px solid #bdbdbd;
-  border-radius: 4px;
-  padding-vertical: 16px;
-  padding-horizontal: 12px;
-  margin-bottom: 12px;
-`;
 export const Column = styled.View`
   width: 48%;
 `;
@@ -70,8 +64,6 @@ export const RowFields = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
-
-export const HalfField = styled(FieldView)``;
 
 export const DottedUploadBox = styled.View`
   border: 1px dashed #bdbdbd;

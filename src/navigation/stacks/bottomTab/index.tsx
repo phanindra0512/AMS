@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Platform} from 'react-native';
 
-import {Home, Profile, ServiceHub} from '../../../screens/main';
+import {Home, OwnerDetails, Profile, ServiceHub} from '../../../screens/main';
 import FocusedTab from './components/FocusedTab';
 import TabBarIcon from './components/TabBarIcon';
 import {screenOptions} from './constants';
@@ -42,7 +42,7 @@ const BottomTab = () => {
 
       <Tab.Screen
         name="Profile"
-        component={Profile}
+        component={OwnerDetails}
         options={{
           tabBarIcon: props => (
             <FocusedTab {...props}>

@@ -18,9 +18,12 @@ export const Header = ({children, handleBack}: HeaderProps) => {
         borderBottomWidth: 1,
         borderBottomColor: '#D9E4E9',
       }}>
-      <Pressable style={{padding: 12, borderRadius: 50}} onPress={handleBack}>
-        <ArrowLeft width={30} height={30} />
-      </Pressable>
+      {handleBack && (
+        <Pressable style={{padding: 12, borderRadius: 50}} onPress={handleBack}>
+          <ArrowLeft width={30} height={30} />
+        </Pressable>
+      )}
+
       {children}
     </RNPHeader>
   );

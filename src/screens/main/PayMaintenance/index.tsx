@@ -1,18 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {Button, Header} from '../../../components';
+import {Button, Header, TextInput} from '../../../components';
 import {
   Container,
   DottedUploadBox,
-  FieldView,
-  HalfField,
-  InfoIcon,
-  InfoRow,
   Column,
   InfoText,
   Label,
   RowFields,
-  SectionCard,
   SectionTitle,
   SuccessBlock,
   SuccessText,
@@ -21,14 +15,8 @@ import {
   ButtonTitle,
   HeaderText,
 } from './styles';
-import {
-  Close,
-  Eye,
-  Phone,
-  ProfileFill,
-  UPIPay,
-  Upload,
-} from '../../../assets/svg';
+import {Close, Eye, Upload} from '../../../assets/svg';
+import TreasurerDetails from './components/TreasurerDetails';
 
 const PayMaintenance = ({navigation}: any) => {
   const handleGoback = () => {
@@ -41,62 +29,57 @@ const PayMaintenance = ({navigation}: any) => {
         <HeaderText>Pay Maintenance</HeaderText>
       </Header>
       <Container>
-        <SectionCard>
-          <SectionTitle>Treasurer of month - June</SectionTitle>
-          <InfoRow>
-            <ProfileFill />
-            <InfoText>Raju, 201</InfoText>
-          </InfoRow>
-          <InfoRow>
-            <Phone />
-            <InfoText>9505876290</InfoText>
-          </InfoRow>
-          <InfoRow>
-            <UPIPay />
-            <InfoText>9505876290@ybl</InfoText>
-          </InfoRow>
-        </SectionCard>
-
+        <TreasurerDetails />
         <SectionTitle>Enter basic information</SectionTitle>
-
+        <Label>Transaction Id</Label>
+        <TextInput
+          placeholder="Enter Transaction Id"
+          activeOutlineColor="#E9E9E9"
+          disabled={false}
+          style={{marginBottom: 12}}
+        />
         <Label>Flat Number</Label>
-        <FieldView>
-          <InfoText>Flat Number 201</InfoText>
-        </FieldView>
+        <TextInput
+          value="Flat Number 201"
+          disabled={true}
+          style={{marginBottom: 12}}
+        />
 
         <Label>Owner Name</Label>
-        <FieldView>
-          <InfoText>Phani</InfoText>
-        </FieldView>
+        <TextInput value="Phani" disabled={true} style={{marginBottom: 12}} />
 
         <RowFields>
           <Column>
             <Label>Date</Label>
-            <HalfField>
-              <InfoText>25-Jul-2025</InfoText>
-            </HalfField>
+            <TextInput
+              value="25-Jul-2025"
+              disabled={true}
+              style={{marginBottom: 12}}
+            />
           </Column>
           <Column>
             <Label>Mobile</Label>
-            <HalfField>
-              <InfoText>9505876290</InfoText>
-            </HalfField>
+            <TextInput
+              value="9505876290"
+              disabled={true}
+              style={{marginBottom: 12}}
+            />
           </Column>
         </RowFields>
 
         <RowFields>
           <Column>
             <Label>Amount</Label>
-            <HalfField>
-              <InfoText>1000</InfoText>
-            </HalfField>
+            <TextInput
+              value="1000"
+              disabled={true}
+              style={{marginBottom: 12}}
+            />
           </Column>
 
           <Column>
             <Label>Payment Type</Label>
-            <HalfField>
-              <InfoText>UPI</InfoText>
-            </HalfField>
+            <TextInput value="UPI" disabled={true} style={{marginBottom: 12}} />
           </Column>
         </RowFields>
 
@@ -107,7 +90,6 @@ const PayMaintenance = ({navigation}: any) => {
 
         <SuccessBlock>
           <SuccessText> Sample-Image001.jpg</SuccessText>
-
           <ActionsContainer>
             <Eye />
             <Close />
@@ -119,6 +101,8 @@ const PayMaintenance = ({navigation}: any) => {
             <ButtonTitle>SUBMIT</ButtonTitle>
           </Button>
         </StyledButton>
+
+  
       </Container>
     </>
   );
