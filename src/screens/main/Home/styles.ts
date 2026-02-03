@@ -54,9 +54,9 @@ export const BalanceAmount = styled.Text`
   padding-left: 4px;
 `;
 export const CardContainer = styled.View`
-  margin: 20px;
+  margin: 16px;
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 8px;
   padding-horizontal: 18px;
   padding-vertical: 12px;
   elevation: 2;

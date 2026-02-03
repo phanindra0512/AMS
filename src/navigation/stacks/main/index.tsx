@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   ViewExpense,
@@ -17,13 +17,33 @@ import {
 
 import {Login, VerifyOTP} from '../../../screens/auth';
 import BottomTab from '../bottomTab';
+import {GlobalStore} from '../../../storage/stores';
 
 const MainStack = createNativeStackNavigator();
 
 const MainNavigator = () => {
+  const [initialRoute, setInitialRoute] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkTokens = async () => {
+      const authToken = GlobalStore.userToken.getValue('authToken');
+      console.log('authToken available in store ===> ', authToken);
+
+      if (!authToken?.authToken) {
+        setInitialRoute('Login');
+      } else if (authToken?.authToken) {
+        setInitialRoute('BottomTab');
+      }
+    };
+
+    checkTokens();
+  }, []);
+
+  if (!initialRoute) return null;
+
   return (
     <MainStack.Navigator
-      initialRouteName="Login"
+      initialRouteName={initialRoute}
       screenOptions={{headerShown: false}}>
       <MainStack.Screen name="Login" component={Login} />
       <MainStack.Screen name="VerifyOTP" component={VerifyOTP} />

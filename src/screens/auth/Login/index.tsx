@@ -29,17 +29,34 @@ import {
   Row,
 } from './styles';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {GlobalStore} from '../../../storage/stores';
+import {useLoginSendOtp} from '../../../api/services/auth';
+import ActivityIndicator from '../../../components/ActivityIndicator';
+import {Overlay} from '../../../common/styles/commonStyles';
 
 const {height} = Dimensions.get('window');
 
 const Login = ({navigation}: any) => {
+  const [phoneNumber, setPhoneNumber] = useState('');
   const insets = useSafeAreaInsets();
   const iosStatusBarHeight = insets.top;
   const iosBottomHeight = insets.bottom;
   const androidStatusBarHeight = StatusBar?.currentHeight || 24;
+  const {loginSendOtp, isLoading, error} = useLoginSendOtp();
 
-  const handleGenerateOTP = () => {
-    navigation.navigate('VerifyOTP');
+  const handleGenerateOTP = async() => {
+    try {
+      const resp = await loginSendOtp({phoneNumber}).unwrap();
+      console.log('Login send otp response ===> ', resp);
+      if (resp.success) {
+        navigation.navigate('VerifyOTP', {
+          OTP: resp.otp,
+          phoneNumber: phoneNumber,
+        });
+      }
+    } catch (error) {
+      console.error('Error in sending OTP ===> ', error);
+    }
   };
   return (
     <SafeAreaProvider>
@@ -87,10 +104,15 @@ const Login = ({navigation}: any) => {
                         keyboardType="numeric"
                         autoCapitalize="none"
                         maxLength={10}
+                        onChangeText={value => setPhoneNumber(value)}
+                        value={phoneNumber}
                       />
                     </Row>
                     <StyledButton>
-                      <Button mode="contained" onPress={handleGenerateOTP}>
+                      <Button
+                        mode="contained"
+                        disabled={isLoading || phoneNumber.length !== 10}
+                        onPress={handleGenerateOTP}>
                         <ButtonTitle>GENERATE OTP</ButtonTitle>
                       </Button>
                     </StyledButton>
@@ -106,6 +128,11 @@ const Login = ({navigation}: any) => {
               </OverlayContainer>
             </ImageBackground>
           </ScrollView>
+          {isLoading && (
+            <Overlay>
+              <ActivityIndicator />
+            </Overlay>
+          )}
         </KeyboardAvoidingView>
       </SafeAreaContainer>
     </SafeAreaProvider>

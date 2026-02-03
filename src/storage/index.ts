@@ -2,6 +2,7 @@ import {MMKV} from 'react-native-mmkv';
 
 const GlobalStoreKeys = {
   authToken: 'authToken',
+  ownerInfo: 'ownerInfo',
 } as const;
 
 export type GlobalStoreKeys = keyof typeof GlobalStoreKeys;

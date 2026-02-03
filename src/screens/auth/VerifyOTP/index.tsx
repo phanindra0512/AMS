@@ -27,18 +27,57 @@ import {
   Row,
 } from '../Login/styles';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useVerifyOtp} from '../../../api/services/auth';
+import ActivityIndicator from '../../../components/ActivityIndicator';
+import {Overlay} from '../../../common/styles/commonStyles';
+import {GlobalStore} from '../../../storage/stores';
 
 const {height} = Dimensions.get('window');
 
-const VerifyOTP = ({navigation}: any) => {
+const VerifyOTP = ({route, navigation}: any) => {
+  const {OTP, phoneNumber} = route.params;
+  const {verifyOtp, isLoading, error} = useVerifyOtp();
   const insets = useSafeAreaInsets();
   const iosStatusBarHeight = insets.top;
   const iosBottomHeight = insets.bottom;
   const androidStatusBarHeight = StatusBar?.currentHeight || 24;
 
-  const handleVerification = () => {
-    navigation.navigate('BottomTab');
+  const handleVerification = async () => {
+    console.log('OTP Verified Successfully', OTP, phoneNumber);
+    try {
+      const res = await verifyOtp({
+        phoneNumber,
+        otp: OTP,
+      }).unwrap();
+
+      console.log('OTP Verified Successfully', res);
+
+      if (res.success) {
+        const ownerInfo = {
+          _id: res.owner._id,
+          name: res.owner.name,
+          phoneNumber: res.owner.phoneNumber,
+          flatNumber: res.owner.flatNumber,
+          floorNumber: res.owner.floorNumber,
+          flatType: res.owner.flatType,
+          status: res.owner.status,
+          occupation: res.owner.occupation,
+          upiID: res.owner.upiID,
+          role: res.owner.role,
+          familyDetails: res.owner.familyDetails,
+        };
+
+        GlobalStore.ownerInfo.setValue('ownerInfo', ownerInfo);
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'BottomTab'}],
+        });
+      }
+    } catch (error) {
+      console.error('Error verifying OTP', error);
+    }
   };
+
   return (
     <SafeAreaProvider>
       <SafeAreaContainer>
@@ -71,7 +110,7 @@ const VerifyOTP = ({navigation}: any) => {
                     <Title>Verify Account!</Title>
                     <SubTitle>
                       Enter the verification code sent to{' '}
-                      <MobileNumber>9505876290</MobileNumber>
+                      <MobileNumber>{phoneNumber}</MobileNumber>
                     </SubTitle>
 
                     <Row>
@@ -80,6 +119,7 @@ const VerifyOTP = ({navigation}: any) => {
                         keyboardType="numeric"
                         autoCapitalize="none"
                         maxLength={6}
+                        value={OTP}
                       />
                     </Row>
                     <CaptionText>
@@ -90,7 +130,10 @@ const VerifyOTP = ({navigation}: any) => {
                       </HighlightText>
                     </CaptionText>
                     <StyledButton>
-                      <Button mode="contained" onPress={handleVerification}>
+                      <Button
+                        mode="contained"
+                        disabled={isLoading || OTP?.length !== 6}
+                        onPress={handleVerification}>
                         <ButtonTitle>VERIFY OTP</ButtonTitle>
                       </Button>
                     </StyledButton>
@@ -99,6 +142,11 @@ const VerifyOTP = ({navigation}: any) => {
               </OverlayContainer>
             </ImageBackground>
           </ScrollView>
+          {isLoading && (
+            <Overlay>
+              <ActivityIndicator />
+            </Overlay>
+          )}
         </KeyboardAvoidingView>
       </SafeAreaContainer>
     </SafeAreaProvider>

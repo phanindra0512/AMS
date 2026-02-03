@@ -8,17 +8,22 @@ import {
   ImageContainer,
   SubHeaderText,
 } from '../styles';
+import { GlobalStore } from '../../../../storage/stores';
 
 interface HeaderProps {
   handleNavigation: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({handleNavigation}) => {
+ const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
+
+console.log('Owner Details:', OwnerDetails);
+
   return (
     <HeaderContainer>
       <View>
-        <HeaderText>Hi Phani!</HeaderText>
-        <SubHeaderText>Flat No: 201, Resident</SubHeaderText>
+        <HeaderText>Hi {OwnerDetails?.name}!</HeaderText>
+        <SubHeaderText>Flat No: {OwnerDetails?.flatNumber}, {OwnerDetails?.role}</SubHeaderText>
       </View>
 
       <BalanceAmountContainer onPress={handleNavigation}>

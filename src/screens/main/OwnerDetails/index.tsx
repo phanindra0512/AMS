@@ -18,8 +18,12 @@ import {
 } from './styles';
 import {Header} from '../../../components';
 import {CopyIcon, ProfileFill} from '../../../assets/svg';
+import {GlobalStore} from '../../../storage/stores';
 
 const OwnerDetails = ({navigation}: any) => {
+  const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
+  const childrens = OwnerDetails?.familyDetails?.children || [];
+  const childrenNames = childrens?.map(child => child.name).join(', ');
   const handleGoback = () => {
     navigation.goBack();
   };
@@ -33,9 +37,9 @@ const OwnerDetails = ({navigation}: any) => {
         <ImageBlock>
           <ProfileText>SR</ProfileText>
         </ImageBlock>
-        <ProfileName>Srinivas Rao</ProfileName>
+        <ProfileName>{OwnerDetails?.name}</ProfileName>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <PayIdText>9505876290@ybl</PayIdText>
+          <PayIdText>{OwnerDetails?.upiID}</PayIdText>
           <CopyIcon />
         </View>
       </ProfileContainer>
@@ -48,27 +52,27 @@ const OwnerDetails = ({navigation}: any) => {
           <CardContent>
             <Row>
               <Label>Full Name</Label>
-              <Value>Srinivas Rao</Value>
+              <Value>{OwnerDetails?.name}</Value>
             </Row>
             <Row>
               <Label>Mobile Number</Label>
-              <Value>9505876290</Value>
+              <Value>{OwnerDetails?.phoneNumber}</Value>
             </Row>
             <Row>
               <Label>Flat Number</Label>
-              <Value>G1, First Floor</Value>
+              <Value>{OwnerDetails?.flatNumber}</Value>
             </Row>
             <Row>
               <Label>Type</Label>
-              <Value>2 bhk</Value>
+              <Value>{OwnerDetails?.flatType}</Value>
             </Row>
             <Row>
               <Label>Status</Label>
-              <Value>OWNER</Value>
+              <Value>{OwnerDetails?.status}</Value>
             </Row>
             <Row>
               <Label>Occupation</Label>
-              <Value>Tailor</Value>
+              <Value>{OwnerDetails?.occupation}</Value>
             </Row>
           </CardContent>
         </Card>
@@ -79,16 +83,16 @@ const OwnerDetails = ({navigation}: any) => {
           </CardHeader>
           <CardContent>
             <Row>
-              <Label>Spounce</Label>
-              <Value>Lakshmi</Value>
+              <Label>Spouse</Label>
+              <Value>{OwnerDetails?.familyDetails?.spouseName}</Value>
             </Row>
             <Row>
               <Label>Childrens</Label>
-              <Value>Riyanshika Devi, Pardhu</Value>
+              <Value>{childrenNames || 'N/A'}</Value>
             </Row>
             <Row>
               <Label>Family Count</Label>
-              <Value>5</Value>
+              <Value>{OwnerDetails?.familyDetails?.numberOfChildren}</Value>
             </Row>
           </CardContent>
         </Card>

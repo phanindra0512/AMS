@@ -1,10 +1,34 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 // import GlobalStorage, {GlobalStoreKeys, StorageInstance} from 'storage';
 
-import GlobalStorage, { GlobalStoreKeys, StorageInstance } from "../storage";
+import GlobalStorage, {GlobalStoreKeys, StorageInstance} from '../storage';
 
-export interface UserToken {
+interface UserToken {
   authToken?: string;
+}
+interface ownerInfo {
+  familyDetails: FamilyDetails;
+  _id: string;
+  name: string;
+  phoneNumber: string;
+  flatNumber: string;
+  floorNumber: string;
+  flatType: string;
+  status: string;
+  occupation: string;
+  upiID: string;
+  role: string;
+}
+
+export interface FamilyDetails {
+  spouseName: string;
+  numberOfChildren: number;
+  children: Children[];
+}
+
+export interface Children {
+  name: string;
+  _id: string;
 }
 
 const getGenericMethods = <T, TKeys extends string>(
@@ -32,7 +56,14 @@ const getGenericMethods = <T, TKeys extends string>(
 });
 
 const getGlobalStore = (instance: StorageInstance<GlobalStoreKeys>) => ({
-  userToken: getGenericMethods<UserToken, GlobalStoreKeys>('authToken', instance),
+  userToken: getGenericMethods<UserToken, GlobalStoreKeys>(
+    'authToken',
+    instance,
+  ),
+  ownerInfo: getGenericMethods<ownerInfo, GlobalStoreKeys>(
+    'ownerInfo',
+    instance,
+  ),
 });
 
 export const GlobalStore = getGlobalStore(GlobalStorage);
