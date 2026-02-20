@@ -5,6 +5,7 @@ import NavigationStack from './src/navigation';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import store from './src/store/store';
+import { navigationRef } from "./src/utils/navigationRef";
 
 const App = () => {
   return (
@@ -12,7 +13,7 @@ const App = () => {
       <StatusBar backgroundColor="transparent" barStyle={'dark-content'} />
       <SafeAreaProvider>
         <SafeAreaView style={{flex: 1}}>
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <NavigationStack />
           </NavigationContainer>
         </SafeAreaView>

@@ -46,6 +46,12 @@ export const InfoText = styled.Text`
   font-family: JosefinSans-Medium;
   padding-left: 4px;
 `;
+export const CenterContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding-vertical: 20px;
+`;
+
 export const InfoDetailsText = styled(InfoText)`
   color: #747476;
 `;
@@ -65,7 +71,7 @@ export const RowFields = styled.View`
   justify-content: space-between;
 `;
 
-export const DottedUploadBox = styled.View`
+export const DottedUploadBox = styled.TouchableOpacity`
   border: 1px dashed #bdbdbd;
   border-radius: 4px;
   align-items: center;
@@ -114,4 +120,29 @@ export const StyledButton = styled.View`
 export const ButtonTitle = styled.Text`
   font-family: JosefinSans-Bold;
   font-size: 14px;
+`;
+
+export const ImageContainer = styled.View`
+  align-items: center;
+  padding-vertical: 20px;
+  background-color: #ffffff;
+`;
+
+export const BillImage = styled.Image`
+  margin-bottom: 12px;
+`;
+
+export const BillTitle = styled.Text`
+  font-size: 16px;
+  font-family: JosefinSans-Medium;
+  color: #636b2f;
+`;
+
+export const CloseText = styled.Text`
+  font-size: 16px;
+  font-family: JosefinSans-Bold;
+  align-self: flex-end;
+  margin-bottom: 16px;
+  margin-right: 16px;
+  color: red;
 `;

@@ -9,15 +9,16 @@ const axiosBaseQuery = (): BaseQueryFn<
   unknown,
   AxiosError
 > => {
-  return async ({ url, method, data, params }) => {
+  return async ({url, method, data, params, headers}) => {
     try {
       const result = await AxiosClient({
         url,
         method,
         data,
         params,
+        headers,
       });
-      return { data: result.data };
+      return {data: result.data};
     } catch (axiosError) {
       const error = axiosError as AxiosError;
       return {

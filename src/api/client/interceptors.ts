@@ -1,6 +1,8 @@
 import {AxiosInstance, InternalAxiosRequestConfig} from 'axios';
 import {GlobalStore} from '../../storage/stores';
 import GlobalStorage from '../../storage';
+import {reset} from '../../utils/navigationRef';
+
 const UNAUTHORIZED = 401;
 
 const setAuthorizationHeaders = (request: InternalAxiosRequestConfig) => {
@@ -13,14 +15,12 @@ const setAuthorizationHeaders = (request: InternalAxiosRequestConfig) => {
   return request;
 };
 
-// const handleLogout = () => {
-//   console.log("Logging out user...");
-//   GlobalStorage.delete("clientToken");
-//   GlobalStorage.delete("userToken");
-//   GlobalStorage.delete("parentInfo");
-//   ToastAndroid.show("Session expired, Please login again.", ToastAndroid.LONG);
-//   reset("LandingScreen");
-// };
+const handleLogout = () => {
+  console.log('Logging out user...');
+  GlobalStorage.delete('authToken');
+  GlobalStorage.delete('ownerInfo');
+  reset('Login');
+};
 
 export default (httpClient: AxiosInstance) => {
   httpClient.interceptors.request.use(setAuthorizationHeaders);
@@ -44,6 +44,7 @@ export default (httpClient: AxiosInstance) => {
       const originalRequest = config;
       const status = response?.status;
       console.log('ERROR RESP FROM INTERCEPTORS', response);
+      console.log('Data passing:', config?.data);
 
       if (status === UNAUTHORIZED) {
         // try {
@@ -69,7 +70,7 @@ export default (httpClient: AxiosInstance) => {
         //   console.log("Error Interceptor in generating token");
         // }
         console.log('Persistent UNAUTHORIZED error, logging out...');
-        // handleLogout();
+        handleLogout();
       }
       return Promise.reject(error);
     },

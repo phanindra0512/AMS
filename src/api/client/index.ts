@@ -11,7 +11,7 @@ const AxiosClient = axios.create({
   baseURL: "https://ams-backend-l7l4.onrender.com",
   headers: {
     Accept: APPLICATION_JSON,
-    [CONTENT_TYPE]: APPLICATION_JSON,
+    // [CONTENT_TYPE]: APPLICATION_JSON,
   },
 });
 
