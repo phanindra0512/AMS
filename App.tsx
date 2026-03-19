@@ -6,7 +6,9 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import store from './src/store/store';
 import { navigationRef } from "./src/utils/navigationRef";
+import Config from "react-native-config";
 
+console.log("API URL:", Config.API_BASE_URL);
 const App = () => {
   return (
     <Provider store={store}>
