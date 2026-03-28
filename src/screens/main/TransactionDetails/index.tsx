@@ -26,7 +26,9 @@ import {
   StatusSuccess,
 } from '../../../assets/svg';
 
-const TransactionDetails = ({navigation}: any) => {
+const TransactionDetails = ({navigation, route}: any) => {
+  const { transactionData } = route.params;
+
   const handleGoback = () => {
     navigation.goBack();
   };
@@ -58,27 +60,27 @@ const TransactionDetails = ({navigation}: any) => {
           </DividerWithDots>
 
           <Label>Total Payment</Label>
-          <Amount>₹ 1000</Amount>
+          <Amount>₹ {transactionData.amount}</Amount>
 
           <DetailRow>
             <DetailLabel>Transaction ID</DetailLabel>
-            <DetailValue>25052876522</DetailValue>
+            <DetailValue>{transactionData.transactionId}</DetailValue>
           </DetailRow>
           <DetailRow>
             <DetailLabel>Date</DetailLabel>
-            <DetailValue>25th June, 2025</DetailValue>
+            <DetailValue>{transactionData.date}</DetailValue>
           </DetailRow>
           <DetailRow>
             <DetailLabel>Payment Type</DetailLabel>
-            <DetailValue>UPI</DetailValue>
+            <DetailValue>{transactionData.paymentType}</DetailValue>
           </DetailRow>
           <DetailRow>
             <DetailLabel>Treasurer</DetailLabel>
-            <DetailValue>Raju</DetailValue>
+            <DetailValue>{transactionData.treasurerName}</DetailValue>
           </DetailRow>
           <DetailRow>
             <DetailLabel>UPI ID</DetailLabel>
-            <DetailValue>9505876290@ybl</DetailValue>
+            <DetailValue>{transactionData.treasurerUPIId}</DetailValue>
           </DetailRow>
 
           <Divider />

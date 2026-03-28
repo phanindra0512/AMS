@@ -1,4 +1,5 @@
 import apiService from '../../../api';
+import {PaymentsResponse} from '../../../types/payment';
 
 export const maintenanceService = apiService.injectEndpoints({
   endpoints: builder => ({
@@ -42,7 +43,13 @@ export const maintenanceService = apiService.injectEndpoints({
         };
       },
     }),
+    getOwnerPayments: builder.query<PaymentsResponse, string>({
+      query: ownerId => ({
+        url: `api/maintenance/owners/${ownerId}/payments`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const {usePayMaintenanceMutation} = maintenanceService;
+export const {usePayMaintenanceMutation, useGetOwnerPaymentsQuery} = maintenanceService;

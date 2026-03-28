@@ -1,5 +1,9 @@
 import styled from 'styled-components/native';
 
+type StatusProps = {
+  status: string;
+};
+
 export const HeaderText = styled.Text`
   font-size: 16px;
   font-family: JosefinSans-Bold;
@@ -51,11 +55,11 @@ export const IconText = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 6px;
 `;
 
 export const DateText = styled.Text`
-  margin-left: 8px;
+  margin-left: 6px;
   font-size: 14px;
   color: #28282b;
   font-family: JosefinSans-Medium;
@@ -68,15 +72,30 @@ export const PaidStatus = styled.View`
   margin-top: 14px;
 `;
 
-export const StatusText = styled.Text`
+export const StatusText = styled.Text<StatusProps>`
   font-size: 14px;
   line-height: 14px;
   margin-left: 4px;
-  color: #198754;
   font-family: JosefinSans-Medium;
+  color: ${props =>
+    props.status === 'SUCCESS'
+      ? '#198754'
+      : props.status === 'PENDING'
+      ? '#FFC107'
+      : '#6c757d'};
 `;
 
 export const AmountText = styled.Text`
   font-size: 16px;
   font-family: JosefinSans-SemiBold;
+`;
+
+export const NoTransactionContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const MainContainer = styled.View`
+  flex: 1;
 `;
