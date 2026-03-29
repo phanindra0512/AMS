@@ -13,49 +13,46 @@ import {
   PhoneText,
   Row,
 } from './styles';
-import {Header} from '../../../components';
+import {ActivityIndicator, Header} from '../../../components';
 import {CallIcon, InfoIcon, MessageIcon} from '../../../assets/svg';
-
-const contacts = [
-  {id: '1', name: 'Srinivas Rao', phone: '9505876290'},
-  {id: '2', name: 'Srinivas Rao', phone: '9505876290'},
-  {id: '3', name: 'Srinivas Rao', phone: '9505876290'},
-];
+import {useGetAllOwnersQuery} from '../../../api/services/owners';
+import {
+  NoDataContainer,
+  NoDataLabel,
+  Overlay,
+} from '../../../common/styles/commonStyles';
+import {getInitials} from '../../../utils/getInitials';
 
 const CallCommittee = ({navigation}: any) => {
+  const {data, isLoading, error} = useGetAllOwnersQuery();
+  const owners = data || [];
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleGoback = () => {
     navigation.goBack();
   };
 
-  const handleInfoDetails = () => {
-    navigation.navigate('OwnerDetails');
+  const handleInfoDetails = (owner: any) => {
+    navigation.navigate('OwnerDetails', {ownerData: owner});
   };
 
   const handlePress = (id: string) => {
     setExpandedId(prev => (prev === id ? null : id));
   };
 
-  const renderItem = ({item}: {item: (typeof contacts)[0]}) => (
-    <Card onPress={() => handlePress(item.id)}>
+  const renderItem = ({item}: {item: any}) => (
+    <Card onPress={() => handlePress(item._id)}>
       <Row>
         <Avatar>
-          <Initials>
-            {item.name
-              .split(' ')
-              .map(n => n[0])
-              .join('')
-              .slice(0, 2)}
-          </Initials>
+          <Initials>{getInitials(item.name)}</Initials>
         </Avatar>
         <ContactInfo>
           <Name>{item.name}</Name>
-          <PhoneText>{item.phone}</PhoneText>
+          <PhoneText>{item.phoneNumber}</PhoneText>
         </ContactInfo>
       </Row>
 
-      {expandedId === item.id && (
+      {expandedId === item._id && (
         <IconRow>
           <IconWrapper onPress={() => console.log('Call', item.phone)}>
             <CallIcon />
@@ -63,7 +60,7 @@ const CallCommittee = ({navigation}: any) => {
           <IconWrapper onPress={() => console.log('Message', item.phone)}>
             <MessageIcon />
           </IconWrapper>
-          <IconWrapper onPress={handleInfoDetails}>
+          <IconWrapper onPress={() => handleInfoDetails(item)}>
             <InfoIcon />
           </IconWrapper>
         </IconRow>
@@ -72,17 +69,32 @@ const CallCommittee = ({navigation}: any) => {
   );
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Header handleBack={handleGoback}>
         <HeaderText>Committee Contacts</HeaderText>
       </Header>
-      <TitleText>Contacts</TitleText>
-      <FlatList
-        data={contacts}
-        keyExtractor={item => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={{marginTop: 12}}
-      />
+
+      {owners.length === 0 ? (
+        <NoDataContainer>
+          <NoDataLabel>Owners not found</NoDataLabel>
+        </NoDataContainer>
+      ) : (
+        <>
+          <TitleText>Contacts</TitleText>
+          <FlatList
+            data={owners}
+            keyExtractor={item => item._id}
+            renderItem={renderItem}
+            contentContainerStyle={{marginTop: 12}}
+          />
+        </>
+      )}
+
+      {isLoading && (
+        <Overlay>
+          <ActivityIndicator />
+        </Overlay>
+      )}
     </View>
   );
 };

@@ -1,10 +1,20 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import {Header} from '../../../components';
+import {HeaderText} from './styles';
 
-const Announcement = () => {
+const Announcement = ({navigation}: any) => {
+  const handleGoback = () => {
+    navigation.goBack();
+  };
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Announcement Screen</Text>
+      <Header handleBack={handleGoback}>
+        <HeaderText>Announcements</HeaderText>
+      </Header>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={styles.text}>Comming soon...</Text>
+      </View>
     </View>
   );
 };
@@ -12,14 +22,11 @@ const Announcement = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
   },
   text: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
     color: '#333',
+    fontFamily: 'JosefinSans-SemiBold',
   },
 });
 

@@ -19,11 +19,13 @@ import {
 import {Header} from '../../../components';
 import {CopyIcon, ProfileFill} from '../../../assets/svg';
 import {GlobalStore} from '../../../storage/stores';
+import {getInitials} from '../../../utils/getInitials';
 
-const OwnerDetails = ({navigation}: any) => {
-  const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
+const OwnerDetails = ({navigation, route}: any) => {
+  const OwnerDetails =
+    route?.params?.ownerData || GlobalStore.ownerInfo.getValue('ownerInfo');
   const childrens = OwnerDetails?.familyDetails?.children || [];
-  const childrenNames = childrens?.map(child => child.name).join(', ');
+  const childrenNames = childrens?.map((child: any) => child.name).join(', ');
   const handleGoback = () => {
     navigation.goBack();
   };
@@ -35,7 +37,7 @@ const OwnerDetails = ({navigation}: any) => {
       </Header>
       <ProfileContainer>
         <ImageBlock>
-          <ProfileText>SR</ProfileText>
+          <ProfileText>{getInitials(OwnerDetails?.name)}</ProfileText>
         </ImageBlock>
         <ProfileName>{OwnerDetails?.name}</ProfileName>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
