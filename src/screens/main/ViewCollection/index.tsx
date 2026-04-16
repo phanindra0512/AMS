@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {Header} from '../../../components';
+import {Header, SelectMonth} from '../../../components';
 import {
   CalendarContainer,
   CalendarText,
@@ -10,12 +10,12 @@ import {
 import {Calendar, Dropdown} from '../../../assets/svg';
 import CollectionStatus from './components/CollectionStatus';
 import Transactions from './components/Transaction';
-import SelectMonth from './components/SelectMonth';
 import {useModal} from '../../../utils/useModal';
+import {getMonthYear} from '../../../utils/useGetMonthYear';
 
 const ViewCollection = ({navigation}: any) => {
   const {isVisible, showModal, dismissModal} = useModal();
-  const [selectedMonth, setSelectedMonth] = useState('Jun');
+  const [selectedMonth, setSelectedMonth] = useState(getMonthYear().monthName);
 
   const handleGoback = () => {
     navigation.goBack();

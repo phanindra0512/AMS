@@ -129,6 +129,7 @@ export const ServiceContainer = styled.Pressable`
   width: 110px;
   align-items: center;
   justify-content: center;
+  margin: 4px;
 `;
 export const ServiceCard = styled.View`
   background-color: #ffffff;

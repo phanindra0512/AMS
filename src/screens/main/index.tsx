@@ -13,6 +13,7 @@ import AddExpenses from './AddExpenses';
 import OwnerDetails from './OwnerDetails';
 import TransactionDetails from './TransactionDetails';
 import AddService from './AddService';
+import PaymentApproval from './Payment Approval';
 
 export {
   Home,
@@ -30,4 +31,5 @@ export {
   OwnerDetails,
   TransactionDetails,
   AddService,
+  PaymentApproval,
 };

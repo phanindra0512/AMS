@@ -1,12 +1,12 @@
 import * as React from 'react';
-import Modal from '../../../../components/Modal';
+import Modal from '../Modal';
 import {
   ModalTitle,
   ModalContainer,
   Grid,
   MonthButton,
   MonthText,
-} from '../styles';
+} from './styles';
 
 const months = [
   'Jan',

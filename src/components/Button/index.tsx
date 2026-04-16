@@ -45,7 +45,7 @@ export const Button: React.FunctionComponent<RNBProps> = ({
         props.style,
       ]}
       labelStyle={{
-        color: disabled ? DISABLED_TEXT : '#FFFFFF',
+        color: disabled ? DISABLED_TEXT : mode === ButtonModes.Outlined ? ENABLED_BG : '#FFFFFF',
       }}>
       {children}
     </RNPButton>

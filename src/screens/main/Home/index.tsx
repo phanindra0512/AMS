@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Container,
   ServiceCard,
@@ -11,6 +11,7 @@ import PaymentStatus from './components/PaymentStatus';
 import Header from './components/Header';
 import {Image, FlatList} from 'react-native';
 import {SERVICES} from '../../../constants/services';
+import GlobalStorage from '../../../storage';
 
 enum PaymentStatusEnum {
   PENDING = 'PENDING',
@@ -19,6 +20,16 @@ enum PaymentStatusEnum {
 }
 const Home = ({navigation}: any) => {
   const paymentStatus: string = PaymentStatusEnum.PENDING;
+  
+  const ownerInfo = GlobalStorage.get('ownerInfo')
+  const owner = ownerInfo ? JSON.parse(ownerInfo) : null;
+  const userRole = owner?.role;
+  
+  const filteredServices = useMemo(() => {
+    return SERVICES.filter(service => 
+      service.roles && service.roles.includes(userRole)
+    );
+  }, [userRole]);
 
   const navigateToNotifications = () => {
     navigation.navigate('Notifications');
@@ -58,6 +69,9 @@ const Home = ({navigation}: any) => {
       case 'Call Committee':
         navigation.navigate('CallCommittee');
         break;
+      case 'Payment Approvals':
+        navigation.navigate('PaymentApproval');
+        break;
       default:
         console.warn('Service not implemented yet.');
     }
@@ -73,10 +87,10 @@ const Home = ({navigation}: any) => {
       <ServicesContainer>
         <ServiceHeading>Resident Services</ServiceHeading>
         <FlatList
-          data={SERVICES}
+          data={filteredServices}
           keyExtractor={item => item.id}
           numColumns={3}
-          columnWrapperStyle={{justifyContent: 'space-between'}}
+          // columnWrapperStyle={{justifyContent: 'center'}}
           renderItem={({item}) => (
             <ServiceContainer onPress={() => handleServiceNavigation(item)}>
               <ServiceCard>

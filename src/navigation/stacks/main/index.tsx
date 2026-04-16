@@ -13,6 +13,7 @@ import {
   OwnerDetails,
   TransactionDetails,
   AddService,
+  PaymentApproval
 } from '../../../screens/main';
 
 import {Login, VerifyOTP} from '../../../screens/auth';
@@ -58,6 +59,7 @@ const MainNavigator = () => {
       <MainStack.Screen name="Notifications" component={Notifications} />
       <MainStack.Screen name="AddExpenses" component={AddExpenses} />
       <MainStack.Screen name="OwnerDetails" component={OwnerDetails} />
+      <MainStack.Screen name="PaymentApproval" component={PaymentApproval} />
       <MainStack.Screen
         name="TransactionDetails"
         component={TransactionDetails}
