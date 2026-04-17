@@ -10,19 +10,21 @@ import {
 } from '../styles';
 import {Button} from '../../../../components';
 
-export const PaymentCard = ({item}: any) => {
+export const PaymentCard = ({item, onViewBill}: any) => {
   const isApproved = item.paymentStatus === 'APPROVED';
 
   return (
     <Card>
       <Title>
-        # {item.flat}, {item.name}
+        # {item.flatNumber}, {item.ownerName}
       </Title>
       <SubText>Transaction ID : {item.transactionId}</SubText>
 
       <Row>
         <AmountText>Amount Paid : ₹{item.amount}</AmountText>
-        <LinkText>View Bill</LinkText>
+        <LinkText onPress={() => onViewBill(item.receiptUrl)}>
+          View Bill
+        </LinkText>
       </Row>
 
       <ButtonRow>

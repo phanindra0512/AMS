@@ -12,6 +12,9 @@ export interface Payment {
   paymentStatus: string;
   createdAt: string;
   treasurer: Treasurer;
+  flatNumber: string;
+  ownerName: string;
+  receiptUrl: string;
 }
 
 export interface PaymentsResponse {

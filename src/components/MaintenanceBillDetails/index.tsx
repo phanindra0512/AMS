@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Dimensions} from 'react-native';
-import Modal from '../../../../components/Modal';
-import {BillImage, BillTitle, CloseText, ImageContainer} from '../styles';
+import Modal from '../Modal';
+import { BillImage, BillTitle, CloseText, ImageContainer } from './styles';
 
 interface MaintenanceBillDetailsProps {
   isVisible: boolean;

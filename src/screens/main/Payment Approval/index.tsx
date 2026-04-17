@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, FlatList} from 'react-native';
-import Header from '../../../components/Header';
+import {Header, ActivityIndicator} from '../../../components';
 import {SelectMonth} from '../../../components';
 import {
   CalendarContainer,
@@ -8,39 +8,41 @@ import {
   HeaderText,
   TreasurerText,
 } from './styles';
+import {Overlay} from '../../../common/styles/commonStyles';
 import {Calendar, Dropdown} from '../../../assets/svg';
 import {useModal} from '../../../utils/useModal';
 import {getMonthYear} from '../../../utils/useGetMonthYear';
 import {PaymentCard} from './components/PaymentCard';
 import {useGetTreasurerDetailsQuery} from '../../../api/services/treasurer';
-
-const dummyData = [
-  {
-    id: '1',
-    name: 'Ramesh Verma',
-    flat: '201',
-    transactionId: '202546879565',
-    amount: '1,000',
-    paymentStatus: 'PENDING',
-  },
-  {
-    id: '2',
-    name: 'Suresh Kumar',
-    flat: '305',
-    transactionId: '987654321234',
-    amount: '2,000',
-    paymentStatus: 'APPROVED',
-  },
-];
+import {useGetPaymentsByMonthYearQuery} from '../../../api/services/maintenance';
+import MaintenanceBillDetails from '../../../components/MaintenanceBillDetails';
 
 const PaymentApproval = ({navigation}: any) => {
   const {isVisible, showModal, dismissModal} = useModal();
+  const {
+    isVisible: isShowPaymentReceipt,
+    showModal: showPaymentReceiptModal,
+    dismissModal: dismissPaymentReceiptModal,
+  } = useModal();
+
   const [selectedMonth, setSelectedMonth] = useState(getMonthYear().monthName);
+  const [selectedPaymentReceipt, setSelectedPaymentReceipt] = useState<{uri: string; name: string} | null>(null);
   const {month, year} = getMonthYear();
   const {data, isLoading, error} = useGetTreasurerDetailsQuery({
     month,
     year,
   });
+console.log("selectedPaymentReceipt",selectedPaymentReceipt);
+
+  const {
+    data: paymentsData,
+    isLoading: isPaymentsLoading,
+    error: paymentsError,
+  } = useGetPaymentsByMonthYearQuery({
+    month: month,
+    year: year,
+  });
+
   const treasurerDetails = data?.data;
 
   const handleGoback = () => {
@@ -68,9 +70,20 @@ const PaymentApproval = ({navigation}: any) => {
       </CalendarContainer>
       <View style={{flex: 1, padding: 16}}>
         <FlatList
-          data={dummyData}
-          keyExtractor={item => item.id}
-          renderItem={({item}) => <PaymentCard item={item} />}
+          data={paymentsData?.data || []}
+          keyExtractor={item => item._id}
+          renderItem={({item}) => (
+            <PaymentCard
+              item={item}
+              onViewBill={(receiptUrl: string) => {
+                setSelectedPaymentReceipt({
+                  uri: receiptUrl,
+                  name: `Receipt - Flat ${item.flatNumber}`,
+                });
+                showPaymentReceiptModal();
+              }}
+            />
+          )}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -80,6 +93,18 @@ const PaymentApproval = ({navigation}: any) => {
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
       />
+
+      <MaintenanceBillDetails
+        isVisible={isShowPaymentReceipt}
+        dismissModal={dismissPaymentReceiptModal}
+        uploadedImageUri={selectedPaymentReceipt?.uri}
+      />
+
+      {isLoading || isPaymentsLoading ? (
+        <Overlay>
+          <ActivityIndicator />
+        </Overlay>
+      ) : null}
     </View>
   );
 };

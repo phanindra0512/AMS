@@ -22,7 +22,7 @@ import {getMonthYear} from '../../../utils/useGetMonthYear';
 import {useGetTreasurerDetailsQuery} from '../../../api/services/treasurer';
 import {GlobalStore} from '../../../storage/stores';
 import {MAINTENANCE_AMOUNT, PAYMENT_TYPE} from '../../../constants/maintenance';
-import MaintenanceBillDetails from './components/MaintenanceBillDetails';
+import MaintenanceBillDetails from '../../../components/MaintenanceBillDetails';
 import {useModal} from '../../../utils/useModal';
 import {usePayMaintenanceMutation} from '../../../api/services/maintenance';
 import {Overlay} from '../../../common/styles/commonStyles';

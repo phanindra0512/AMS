@@ -49,7 +49,20 @@ export const maintenanceService = apiService.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getPaymentsByMonthYear: builder.query<
+      PaymentsResponse,
+      {month: number; year: number}
+    >({
+      query: ({month, year}) => ({
+        url: `api/maintenance/payments?month=${month}&year=${year}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const {usePayMaintenanceMutation, useGetOwnerPaymentsQuery} = maintenanceService;
+export const {
+  usePayMaintenanceMutation,
+  useGetOwnerPaymentsQuery,
+  useGetPaymentsByMonthYearQuery,
+} = maintenanceService;
