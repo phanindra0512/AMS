@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList} from 'react-native';
 import {ActivityIndicator, Header} from '../../../components';
 import {
   AmountText,
@@ -15,6 +15,9 @@ import {
   SectionTitle,
   StatusText,
   Dots,
+  RejectionContainer,
+  RejectionTitle,
+  RejectionMessage,
 } from './styles';
 import {TransactionCalendar, StatusSuccess} from '../../../assets/svg';
 import GlobalStorage from '../../../storage';
@@ -75,8 +78,8 @@ const ViewReceipts = ({navigation}: any) => {
 
   const renderItem = ({item}: {item: ProcessedPayment}) => (
     <Card
-      onPress={() => item.status === 'SUCCESS' && handleNavigation(item)}
-      disabled={item.status !== 'SUCCESS'}>
+      onPress={() => item.status === 'APPROVED' && handleNavigation(item)}
+      disabled={item.status !== 'APPROVED'}>
       <Label>Transaction ID : {item.transactionId}</Label>
       <Dots />
       <Row>
@@ -91,10 +94,20 @@ const ViewReceipts = ({navigation}: any) => {
         </IconText>
 
         <PaidStatus>
-          {item.status === 'SUCCESS' && <StatusSuccess />}
+          {item.status === 'APPROVED' && <StatusSuccess />}
           <StatusText status={item.status}>{item.status}</StatusText>
         </PaidStatus>
       </Row>
+
+      {item.status === 'REJECTED' && (
+        <RejectionContainer>
+          <RejectionTitle>⚠ Payment Rejected</RejectionTitle>
+          <RejectionMessage>
+            Your payment was rejected by the treasurer. Please repay the amount
+            and attach a proper receipt.
+          </RejectionMessage>
+        </RejectionContainer>
+      )}
     </Card>
   );
 
@@ -117,7 +130,7 @@ const ViewReceipts = ({navigation}: any) => {
           <HeaderText>Transaction History</HeaderText>
         </Header>
 
-        {groupedData.length === 0 ? (
+        {isLoading ? null : groupedData.length === 0 ? (
           <NoTransactionContainer>
             <Label>No Transaction Found</Label>
           </NoTransactionContainer>

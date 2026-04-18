@@ -78,7 +78,9 @@ const FlatDetails = ({navigation}: any) => {
       </Header>
 
       <View style={{flex: 1, marginTop: 16}}>
-        {sections.length === 0 ? (
+        {isLoading ? (
+          null
+        ) : sections.length === 0 ? (
           <NoDataContainer>
             <NoDataLabel>Owners not found</NoDataLabel>
           </NoDataContainer>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, Text} from 'react-native';
 import {Header, ActivityIndicator} from '../../../components';
 import {SelectMonth} from '../../../components';
 import {
@@ -11,7 +11,7 @@ import {
 import {Overlay} from '../../../common/styles/commonStyles';
 import {Calendar, Dropdown} from '../../../assets/svg';
 import {useModal} from '../../../utils/useModal';
-import {getMonthYear} from '../../../utils/useGetMonthYear';
+import {getMonthYear, MONTHS} from '../../../utils/useGetMonthYear';
 import {PaymentCard} from './components/PaymentCard';
 import {useGetTreasurerDetailsQuery} from '../../../api/services/treasurer';
 import {useGetPaymentsByMonthYearQuery} from '../../../api/services/maintenance';
@@ -27,26 +27,33 @@ const PaymentApproval = ({navigation}: any) => {
 
   const [selectedMonth, setSelectedMonth] = useState(getMonthYear().monthName);
   const [selectedPaymentReceipt, setSelectedPaymentReceipt] = useState<{uri: string; name: string} | null>(null);
-  const {month, year} = getMonthYear();
-  const {data, isLoading, error} = useGetTreasurerDetailsQuery({
-    month,
+  const [isMonthChanging, setIsMonthChanging] = useState(false);
+  const {year} = getMonthYear();
+
+  const monthNumber = MONTHS.indexOf(selectedMonth) + 1;
+
+  const {data, isLoading} = useGetTreasurerDetailsQuery({
+    month: monthNumber,
     year,
   });
-console.log("selectedPaymentReceipt",selectedPaymentReceipt);
-
+  
   const {
     data: paymentsData,
     isLoading: isPaymentsLoading,
-    error: paymentsError,
+    refetch,
   } = useGetPaymentsByMonthYearQuery({
-    month: month,
-    year: year,
+    month: monthNumber,
+    year,
   });
 
   const treasurerDetails = data?.data;
 
   const handleGoback = () => {
     navigation.goBack();
+  };
+
+  const handleApprovalComplete = () => {
+    refetch();
   };
 
   return (
@@ -69,29 +76,44 @@ console.log("selectedPaymentReceipt",selectedPaymentReceipt);
         <Dropdown />
       </CalendarContainer>
       <View style={{flex: 1, padding: 16}}>
-        <FlatList
-          data={paymentsData?.data || []}
-          keyExtractor={item => item._id}
-          renderItem={({item}) => (
-            <PaymentCard
-              item={item}
-              onViewBill={(receiptUrl: string) => {
-                setSelectedPaymentReceipt({
-                  uri: receiptUrl,
-                  name: `Receipt - Flat ${item.flatNumber}`,
-                });
-                showPaymentReceiptModal();
-              }}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-        />
+        {isLoading || isPaymentsLoading || isMonthChanging ? (
+          null
+        ) : paymentsData?.data && paymentsData.data.length > 0 ? (
+          <FlatList
+            data={paymentsData.data}
+            keyExtractor={item => item._id}
+            renderItem={({item}) => (
+              <PaymentCard
+                item={item}
+                onViewBill={(receiptUrl: string) => {
+                  setSelectedPaymentReceipt({
+                    uri: receiptUrl,
+                    name: `Receipt - Flat ${item.flatNumber}`,
+                  });
+                  showPaymentReceiptModal();
+                }}
+                onApprovalComplete={handleApprovalComplete}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontSize: 16, color: '#757575', fontFamily: 'JosefinSans-Regular'}}>
+              No transactions available
+            </Text>
+          </View>
+        )}
       </View>
       <SelectMonth
         isVisible={isVisible}
         dismissModal={dismissModal}
         selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
+        setSelectedMonth={(month: string) => {
+          setIsMonthChanging(true);
+          setSelectedMonth(month);
+          setTimeout(() => setIsMonthChanging(false), 500);
+        }}
       />
 
       <MaintenanceBillDetails
@@ -100,7 +122,7 @@ console.log("selectedPaymentReceipt",selectedPaymentReceipt);
         uploadedImageUri={selectedPaymentReceipt?.uri}
       />
 
-      {isLoading || isPaymentsLoading ? (
+      {isLoading || isPaymentsLoading || isMonthChanging ? (
         <Overlay>
           <ActivityIndicator />
         </Overlay>

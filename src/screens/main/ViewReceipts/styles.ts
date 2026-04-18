@@ -76,13 +76,13 @@ export const StatusText = styled.Text<StatusProps>`
   font-size: 14px;
   line-height: 14px;
   margin-left: 4px;
-  font-family: JosefinSans-Medium;
+  font-family: JosefinSans-Bold;
   color: ${props =>
-    props.status === 'SUCCESS'
+    props.status === 'APPROVED'
       ? '#198754'
       : props.status === 'PENDING'
       ? '#FFC107'
-      : '#6c757d'};
+      : '#d32f2f'};
 `;
 
 export const AmountText = styled.Text`
@@ -98,4 +98,25 @@ export const NoTransactionContainer = styled.View`
 
 export const MainContainer = styled.View`
   flex: 1;
+`;
+
+export const RejectionContainer = styled.View`
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top-width: 1px;
+  border-top-color: #e0e0e0;
+`;
+
+export const RejectionTitle = styled.Text`
+  font-size: 14px;
+  color: #d32f2f;
+  font-family: JosefinSans-Medium;
+  margin-bottom: 4px;
+`;
+
+export const RejectionMessage = styled.Text`
+  font-size: 13px;
+  color: #757575;
+  font-family: JosefinSans-Regular;
+  line-height: 18px;
 `;

@@ -12,8 +12,12 @@ import {
 } from './styles';
 import {Calendar, Dropdown} from '../../../assets/svg';
 import ExpenseCard from '../../../components/ExpenseCard';
+import {GlobalStore} from '../../../storage/stores';
 
 const ViewExpense = ({navigation}: any) => {
+  const ownerInfo = GlobalStore.ownerInfo.getValue('ownerInfo');
+  const userRole = ownerInfo?.role;
+
   const handleGoback = () => {
     navigation.goBack();
   };
@@ -51,11 +55,13 @@ const ViewExpense = ({navigation}: any) => {
         />
       </ScrollView>
 
-      <StyledButton>
-        <Button mode="contained" onPress={handleNavigation}>
-          <ButtonTitle>ADD EXPENSE</ButtonTitle>
-        </Button>
-      </StyledButton>
+      {userRole === 'TREASURER' && (
+        <StyledButton>
+          <Button mode="contained" onPress={handleNavigation}>
+            <ButtonTitle>ADD EXPENSE</ButtonTitle>
+          </Button>
+        </StyledButton>
+      )}
     </View>
   );
 };

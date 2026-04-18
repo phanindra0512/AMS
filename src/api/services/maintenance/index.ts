@@ -42,12 +42,14 @@ export const maintenanceService = apiService.injectEndpoints({
           },
         };
       },
+      invalidatesTags: ['Payments'],
     }),
     getOwnerPayments: builder.query<PaymentsResponse, string>({
       query: ownerId => ({
         url: `api/maintenance/owners/${ownerId}/payments`,
         method: 'GET',
       }),
+      providesTags: ['Payments'],
     }),
     getPaymentsByMonthYear: builder.query<
       PaymentsResponse,
@@ -57,6 +59,18 @@ export const maintenanceService = apiService.injectEndpoints({
         url: `api/maintenance/payments?month=${month}&year=${year}`,
         method: 'GET',
       }),
+      providesTags: ['Payments'],
+    }),
+    approvePayment: builder.mutation({
+      query: ({paymentId, status}: {paymentId: string; status: 'APPROVED' | 'REJECTED'}) => ({
+        url: 'api/maintenance/approval',
+        method: 'POST',
+        data: {
+          paymentId,
+          status,
+        },
+      }),
+      invalidatesTags: ['Payments'],
     }),
   }),
 });
@@ -65,4 +79,5 @@ export const {
   usePayMaintenanceMutation,
   useGetOwnerPaymentsQuery,
   useGetPaymentsByMonthYearQuery,
+  useApprovePaymentMutation,
 } = maintenanceService;

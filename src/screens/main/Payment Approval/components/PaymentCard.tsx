@@ -9,9 +9,36 @@ import {
   Title,
 } from '../styles';
 import {Button} from '../../../../components';
+import {useApprovePaymentMutation} from '../../../../api/services/maintenance';
 
-export const PaymentCard = ({item, onViewBill}: any) => {
+export const PaymentCard = ({item, onViewBill, onApprovalComplete}: any) => {
   const isApproved = item.paymentStatus === 'APPROVED';
+  const isRejected = item.paymentStatus === 'REJECTED';
+  const [approvePayment, {isLoading}] = useApprovePaymentMutation();
+
+  const handleApprove = async () => {
+    try {
+      await approvePayment({
+        paymentId: item._id,
+        status: 'APPROVED',
+      }).unwrap();
+      onApprovalComplete?.();
+    } catch (error) {
+      console.log('Approval error:', error);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      await approvePayment({
+        paymentId: item._id,
+        status: 'REJECTED',
+      }).unwrap();
+      onApprovalComplete?.();
+    } catch (error) {
+      console.log('Rejection error:', error);
+    }
+  };
 
   return (
     <Card>
@@ -35,20 +62,29 @@ export const PaymentCard = ({item, onViewBill}: any) => {
             style={{flex: 1}}>
             <ButtonTitle>Approved</ButtonTitle>
           </Button>
+        ) : isRejected ? (
+          <Button
+            mode="contained"
+            disabled
+            style={{flex: 1, opacity: 0.5, backgroundColor: '#d32f2f'}}>
+            <ButtonTitle>Rejected</ButtonTitle>
+          </Button>
         ) : (
           <>
             <Button
               mode="outlined"
-              onPress={() => console.log('Rejected', item.id)}
+              disabled={isLoading}
+              onPress={handleReject}
               style={{flex: 1}}>
-              <ButtonTitle>Reject</ButtonTitle>
+              <ButtonTitle>{isLoading ? 'Processing...' : 'Reject'}</ButtonTitle>
             </Button>
 
             <Button
               mode="contained"
-              onPress={() => console.log('Approved', item.id)}
+              disabled={isLoading}
+              onPress={handleApprove}
               style={{flex: 1}}>
-              <ButtonTitle>Approve</ButtonTitle>
+              <ButtonTitle>{isLoading ? 'Processing...' : 'Approve'}</ButtonTitle>
             </Button>
           </>
         )}
