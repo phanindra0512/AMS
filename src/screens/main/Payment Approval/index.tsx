@@ -59,7 +59,7 @@ const PaymentApproval = ({navigation}: any) => {
   return (
     <View style={{flex: 1}}>
       <Header handleBack={handleGoback}>
-        <HeaderText>Pay Maintenance</HeaderText>
+        <HeaderText>Payment Approval</HeaderText>
       </Header>
       <CalendarContainer onPress={showModal}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

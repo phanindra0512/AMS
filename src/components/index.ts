@@ -4,5 +4,6 @@ import TextInput from './TextInput';
 import ActivityIndicator from './ActivityIndicator';
 import SelectMonth from './SelectMonth';
 import MaintenanceBillDetails from './MaintenanceBillDetails';
+import StatusModal from './StatusModal';
 
-export {Button, Header, TextInput, ActivityIndicator, SelectMonth, MaintenanceBillDetails};
+export {Button, Header, TextInput, ActivityIndicator, SelectMonth, MaintenanceBillDetails, StatusModal};

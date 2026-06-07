@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ImageBackground,
   Image,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {Button} from '../../../components';
+import {Button, StatusModal} from '../../../components';
 import {
   SafeAreaContainer,
   OverlayContainer,
@@ -29,33 +29,53 @@ import {
   Row,
 } from './styles';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {GlobalStore} from '../../../storage/stores';
 import {useLoginSendOtp} from '../../../api/services/auth';
 import ActivityIndicator from '../../../components/ActivityIndicator';
 import {Overlay} from '../../../common/styles/commonStyles';
+import {useModal} from '../../../utils/useModal';
 
 const {height} = Dimensions.get('window');
+type StatusType = 'success' | 'error';
 
 const Login = ({navigation}: any) => {
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [modalConfig, setModalConfig] = useState<{
+    type: StatusType;
+    title: string;
+    message: string;
+  }>({
+    type: 'error',
+    title: '',
+    message: '',
+  });
   const insets = useSafeAreaInsets();
   const iosStatusBarHeight = insets.top;
   const iosBottomHeight = insets.bottom;
   const androidStatusBarHeight = StatusBar?.currentHeight || 24;
-  const {loginSendOtp, isLoading, error} = useLoginSendOtp();
+  const {loginSendOtp, isLoading, isError} = useLoginSendOtp();
+  const {isVisible, showModal, dismissModal} = useModal();
 
-  const handleGenerateOTP = async() => {
+  // Handle error state
+  useEffect(() => {
+    if (isError) {
+      setModalConfig({
+        type: 'error',
+        title: 'Login Failed',
+        message: 'Please enter a valid mobile number and try again.',
+      });
+      showModal();
+    }
+  }, [isError]);
+
+  const handleGenerateOTP = async () => {
     try {
       const resp = await loginSendOtp({phoneNumber}).unwrap();
-      console.log('Login send otp response ===> ', resp);
-      if (resp.success) {
-        navigation.navigate('VerifyOTP', {
-          OTP: resp.otp,
-          phoneNumber: phoneNumber,
-        });
-      }
-    } catch (error) {
-      console.error('Error in sending OTP ===> ', error);
+      navigation.navigate('VerifyOTP', {
+        OTP: resp.otp,
+        phoneNumber: phoneNumber,
+      });
+    } catch (err) {
+      // Error is handled by useEffect above
     }
   };
   return (
@@ -128,6 +148,13 @@ const Login = ({navigation}: any) => {
               </OverlayContainer>
             </ImageBackground>
           </ScrollView>
+          <StatusModal
+            visible={isVisible}
+            type={modalConfig.type}
+            title={modalConfig.title}
+            message={modalConfig.message}
+            onClose={dismissModal}
+          />
           {isLoading && (
             <Overlay>
               <ActivityIndicator />
