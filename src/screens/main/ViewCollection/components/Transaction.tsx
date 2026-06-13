@@ -12,42 +12,30 @@ import {
   StatusTextNew,
 } from '../styles';
 import {TransactionIcon} from '../../../../assets/svg';
+import { formatDate } from '../../../../utils/useGetMonthYear';
 
-const Transactions = () => {
+const Transactions = ({transactions}: {transactions: any[]}) => {
   return (
     <View>
-      <CardContainer>
-        <Avatar>
-          <TransactionIcon />
-        </Avatar>
-        <Content>
-          <NameText>Phani, Flat No : 201</NameText>
-          <DateText>25th Jun, 2025</DateText>
-        </Content>
-        <RightSection>
-          <AmountTextNew>₹ 1000</AmountTextNew>
-          <StatusBadge color="#FB8C00">
-            <StatusTextNew>Pending</StatusTextNew>
-          </StatusBadge>
-        </RightSection>
-      </CardContainer>
-
-      {/* Second transaction */}
-      <CardContainer>
-        <Avatar>
-          <TransactionIcon />
-        </Avatar>
-        <Content>
-          <NameText>Phani, Flat No : 201</NameText>
-          <DateText>25th Jun, 2025</DateText>
-        </Content>
-        <RightSection>
-          <AmountTextNew>₹ 1000</AmountTextNew>
-          <StatusBadge color="#198754">
-            <StatusTextNew>Success</StatusTextNew>
-          </StatusBadge>
-        </RightSection>
-      </CardContainer>
+      {transactions.map(transaction => (
+        <CardContainer key={transaction._id}>
+          <Avatar>
+            <TransactionIcon />
+          </Avatar>
+          <Content>
+            <NameText>
+              {transaction?.ownerName}, Flat No : {transaction?.flatNumber}
+            </NameText>
+            <DateText>{formatDate(transaction.createdAt)}</DateText>
+          </Content>
+          <RightSection>
+            <AmountTextNew>₹ {transaction?.amount}</AmountTextNew>
+            <StatusBadge status={transaction.paymentStatus}>
+              <StatusTextNew>{transaction?.paymentStatus}</StatusTextNew>
+            </StatusBadge>
+          </RightSection>
+        </CardContainer>
+      ))}
     </View>
   );
 };

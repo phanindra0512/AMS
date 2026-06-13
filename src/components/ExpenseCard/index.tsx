@@ -11,8 +11,8 @@ import {
   TitleRow,
   TitleText,
 } from './styles';
-import {Delete, Edit, ExpenseIcon} from '../../assets/svg';
-import {Text, View} from 'react-native';
+import {ExpenseIcon} from '../../assets/svg';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface ExpenseCardProps {
   title: string;
@@ -21,6 +21,7 @@ interface ExpenseCardProps {
   amount: string;
   date: string;
   paidBy: string;
+  userRole: string | undefined;
 }
 
 const ExpenseCard = ({
@@ -30,6 +31,7 @@ const ExpenseCard = ({
   amount,
   date,
   paidBy,
+  userRole,
 }: ExpenseCardProps) => {
   return (
     <CardWrapper>
@@ -52,8 +54,10 @@ const ExpenseCard = ({
       </Row>
 
       <FloatingActionButton>
-        <Edit />
-        <Delete />
+        <MaterialIcons name="remove-red-eye" size={18} color={'#FFF'} />
+        {userRole === 'TREASURER' && (
+          <MaterialIcons name="delete" size={18} color={'#FFF'} />
+        )}
       </FloatingActionButton>
     </CardWrapper>
   );

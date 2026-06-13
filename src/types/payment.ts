@@ -21,6 +21,7 @@ export interface PaymentsResponse {
   success: boolean;
   ownerId: string;
   totalPayments: number;
+  totalAmount: number;
   data: Payment[];
 }
 

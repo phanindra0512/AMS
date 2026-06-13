@@ -4,32 +4,7 @@ export const HeaderText = styled.Text`
   font-size: 16px;
   font-family: JosefinSans-Bold;
 `;
-export const CalendarContainer = styled.Pressable`
-  background-color: #f5f5f5;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border-width: 1px;
-  border-color: #e0e0e0;
-  padding: 12px;
-  margin-horizontal: 16px;
-  border-radius: 8px;
-  margin-top: 16px;
-`;
-export const CalendarText = styled.Text`
-  font-size: 14px;
-  font-family: JosefinSans-Bold;
-  color: #000000;
-  line-height: 24px;
-  padding-left: 8px;
-`;
-export const TreasurerText = styled.Text`
-  font-size: 12px;
-  font-family: JosefinSans-Regular;
-  color: #343434;
-  line-height: 12px;
-  padding-left: 8px;
-`;
+
 export const BackgroundContainer = styled.View`
   position: relative;
   align-items: center;
@@ -42,6 +17,7 @@ export const TextOverlay = styled.View`
   align-items: center;
   justify-content: center;
 `;
+
 export const SubText = styled.Text`
   font-size: 11px;
   line-height: 12px;
@@ -160,8 +136,16 @@ export const AmountTextNew = styled.Text`
   font-family: JosefinSans-Bold;
 `;
 
-export const StatusBadge = styled.View<{color: string}>`
-  background-color: ${({color}) => color};
+export const StatusBadge = styled.View<{
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+}>`
+  background-color: ${({status}) =>
+    status === 'APPROVED'
+      ? '#198754'
+      : status === 'REJECTED'
+      ? '#DC3545'
+      : '#FB8C00'};
+
   padding: 6px;
   border-radius: 6px;
   margin-top: 6px;
@@ -175,4 +159,16 @@ export const StatusTextNew = styled.Text`
   line-height: 12px;
   font-family: JosefinSans-SemiBold;
   color: #fff;
+`;
+
+export const NoTransactionContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Label = styled.Text`
+  font-size: 14px;
+  color: #313131;
+  font-family: JosefinSans-Medium;
 `;

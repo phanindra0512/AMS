@@ -52,7 +52,7 @@ export const PaidByText = styled.Text`
   font-family: JosefinSans-Medium;
   color: #28282b;
 `;
-export const FloatingActionButton = styled.TouchableOpacity`
+export const FloatingActionButton = styled.View`
   position: absolute;
   bottom: 0;
   right: 0;
@@ -61,6 +61,6 @@ export const FloatingActionButton = styled.TouchableOpacity`
   padding: 8px 24px;
   border-bottom-right-radius: 8px;
   border-top-left-radius: 8px;
-  width: 120px;
   justify-content: space-between;
+  gap: 32px;
 `;

@@ -1,20 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, ScrollView} from 'react-native';
-import {Button, Header} from '../../../components';
+import {Button, Header, Calendar, SelectMonth} from '../../../components';
 import {
   ButtonTitle,
-  CalendarContainer,
-  CalendarText,
   ExpenseTotalText,
   HeaderText,
   StyledButton,
-  TreasurerText,
 } from './styles';
-import {Calendar, Dropdown} from '../../../assets/svg';
 import ExpenseCard from '../../../components/ExpenseCard';
 import {GlobalStore} from '../../../storage/stores';
+import {getMonthYear} from '../../../utils/useGetMonthYear';
+import {useModal} from '../../../utils/useModal';
 
 const ViewExpense = ({navigation}: any) => {
+  const {isVisible, showModal, dismissModal} = useModal();
+  const [selectedMonth, setSelectedMonth] = useState(getMonthYear().monthName);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const ownerInfo = GlobalStore.ownerInfo.getValue('ownerInfo');
   const userRole = ownerInfo?.role;
 
@@ -32,16 +33,11 @@ const ViewExpense = ({navigation}: any) => {
           <HeaderText>View Expenses</HeaderText>
         </Header>
 
-        <CalendarContainer>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Calendar />
-            <View>
-              <CalendarText>Collection of month - Jun</CalendarText>
-              <TreasurerText>Treasurer : Raju, 201</TreasurerText>
-            </View>
-          </View>
-          <Dropdown />
-        </CalendarContainer>
+        <Calendar
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          onPress={showModal}
+        />
 
         <ExpenseTotalText>Total Expense Amount : ₹ 1,000 </ExpenseTotalText>
 
@@ -52,6 +48,7 @@ const ViewExpense = ({navigation}: any) => {
           amount="1,000"
           date="24th May, 2025"
           paidBy="Raju"
+          userRole={userRole}
         />
       </ScrollView>
 
@@ -62,6 +59,14 @@ const ViewExpense = ({navigation}: any) => {
           </Button>
         </StyledButton>
       )}
+      <SelectMonth
+        isVisible={isVisible}
+        dismissModal={dismissModal}
+        selectedMonth={selectedMonth}
+        setSelectedMonth={setSelectedMonth}
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
+      />
     </View>
   );
 };
