@@ -7,5 +7,6 @@ import MaintenanceBillDetails from './MaintenanceBillDetails';
 import StatusModal from './StatusModal';
 import Calendar from './Calendar';
 import DropdownField from './DropdownField';
+import TreasureModal from './TreasureModal';
 
-export {Button, Header, TextInput, ActivityIndicator, SelectMonth, MaintenanceBillDetails, StatusModal, Calendar, DropdownField};
+export {Button, Header, TextInput, ActivityIndicator, SelectMonth, MaintenanceBillDetails, StatusModal, Calendar, DropdownField, TreasureModal};

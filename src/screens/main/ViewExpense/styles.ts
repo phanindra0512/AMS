@@ -33,3 +33,14 @@ export const ButtonTitle = styled.Text`
   font-family: JosefinSans-Bold;
   font-size: 14px;
 `;
+export const NoItemsContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Label = styled.Text`
+  font-size: 14px;
+  color: #313131;
+  font-family: JosefinSans-Medium;
+`;

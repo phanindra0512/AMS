@@ -11,6 +11,8 @@ import {
   SubHeaderText,
 } from '../styles';
 import {Success, Warning} from '../../../../assets/svg';
+import {getMonthYear} from '../../../../utils/useGetMonthYear';
+import {MAINTENANCE_AMOUNT} from '../../../../constants/maintenance';
 
 enum PaymentStatusEnum {
   PENDING = 'PENDING',
@@ -19,6 +21,8 @@ enum PaymentStatusEnum {
 }
 
 const PaymentStatus = ({paymentStatus, handleNavigation}: any) => {
+  const getMonthName = getMonthYear().monthName;
+  const yearNumber = new Date().getFullYear();
   return (
     <CardContainer>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -37,8 +41,8 @@ const PaymentStatus = ({paymentStatus, handleNavigation}: any) => {
       </View>
       <SubHeaderText color="#757575">
         {paymentStatus === PaymentStatusEnum.PENDING
-          ? 'You haven’t paid your ₹1500 maintenance for June 2025.'
-          : 'You’ve paid ₹1500 for June 2025. Thank you!'}
+          ? `Your maintenance fee of ₹${MAINTENANCE_AMOUNT.toLocaleString('en-IN')} for ${getMonthName} ${yearNumber} is pending.`
+          : `Your maintenance payment of ₹${MAINTENANCE_AMOUNT.toLocaleString('en-IN')} for ${getMonthName} ${yearNumber} has been received. Thank you!`}
       </SubHeaderText>
 
       {paymentStatus === PaymentStatusEnum.PENDING ? (

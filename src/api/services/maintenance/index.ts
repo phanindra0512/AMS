@@ -1,5 +1,8 @@
 import apiService from '../../../api';
-import {PaymentsResponse} from '../../../types/payment';
+import {
+  PaymentsResponse,
+  TreasurerAmountResponse,
+} from '../../../types/payment';
 
 export const maintenanceService = apiService.injectEndpoints({
   endpoints: builder => ({
@@ -62,7 +65,13 @@ export const maintenanceService = apiService.injectEndpoints({
       providesTags: ['Payments'],
     }),
     approvePayment: builder.mutation({
-      query: ({paymentId, status}: {paymentId: string; status: 'APPROVED' | 'REJECTED'}) => ({
+      query: ({
+        paymentId,
+        status,
+      }: {
+        paymentId: string;
+        status: 'APPROVED' | 'REJECTED';
+      }) => ({
         url: 'api/maintenance/approval',
         method: 'POST',
         data: {
@@ -72,6 +81,14 @@ export const maintenanceService = apiService.injectEndpoints({
       }),
       invalidatesTags: ['Payments'],
     }),
+
+    getTreasurerAmount: builder.query<TreasurerAmountResponse, void>({
+      query: () => ({
+        url: 'api/maintenance/treasurer-amount',
+        method: 'GET',
+      }),
+      providesTags: ['Payments'],
+    }),
   }),
 });
 
@@ -80,4 +97,5 @@ export const {
   useGetOwnerPaymentsQuery,
   useGetPaymentsByMonthYearQuery,
   useApprovePaymentMutation,
+  useGetTreasurerAmountQuery
 } = maintenanceService;

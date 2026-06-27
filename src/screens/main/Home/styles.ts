@@ -48,7 +48,7 @@ export const ImageContainer = styled.View`
   justify-content: center;
 `;
 export const BalanceAmount = styled.Text`
-  font-size: 12px;
+  font-size: 14px;
   color: #f0f0f0;
   font-family: JosefinSans-Bold;
   padding-left: 4px;

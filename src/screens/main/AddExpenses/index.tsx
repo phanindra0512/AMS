@@ -13,6 +13,7 @@ import {
   Header,
   MaintenanceBillDetails,
   TextInput,
+  ActivityIndicator,
 } from '../../../components';
 import {
   ActionsContainer,
@@ -32,13 +33,18 @@ import {Close, Eye, Upload} from '../../../assets/svg';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {getMonthYear} from '../../../utils/useGetMonthYear';
 import {useModal} from '../../../utils/useModal';
+import {useAddExpensesMutation} from '../../../api/services/expenses';
+import {StatusModal} from '../../../components';
+import {Overlay} from '../../../common/styles/commonStyles';
 
 const expenseOptions = [
-  {label: 'Food', value: 'food'},
-  {label: 'Travel', value: 'travel'},
-  {label: 'Medical', value: 'medical'},
-  {label: 'Shopping', value: 'shopping'},
+  {label: 'Plumber', value: 'PLUMBER'},
+  {label: 'Electrician', value: 'ELECTRICIAN'},
+  {label: 'Carpenter', value: 'CARPENTER'},
+  {label: 'Municipality', value: 'MUNICIPALITY'},
+  {label: 'Other', value: 'OTHER'},
 ];
+type StatusType = 'success' | 'error';
 
 const AddExpenses = ({navigation}: any) => {
   const {isVisible, showModal, dismissModal} = useModal();
@@ -48,7 +54,35 @@ const AddExpenses = ({navigation}: any) => {
     name: string;
     type: string;
   } | null>(null);
+  const [expenseName, setExpenseName] = useState('');
+  const [serviceProviderName, setServiceProviderName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [amountPaid, setAmountPaid] = useState('');
+  const [modalConfig, setModalConfig] = useState<{
+    type: StatusType;
+    title: string;
+    message: string;
+  }>({
+    type: 'success',
+    title: '',
+    message: '',
+  });
+  const {
+    isVisible: isStatusVisible,
+    showModal: showStatusModal,
+    dismissModal: dismissStatusModal,
+  } = useModal();
   const {day, month, monthName, year} = getMonthYear();
+
+  const isFormValid =
+    selectedExpense &&
+    serviceProviderName.trim() &&
+    contactNumber.trim() &&
+    amountPaid.trim() &&
+    selectedPaymentReceipt &&
+    (selectedExpense !== 'OTHER' || expenseName.trim());
+
+  const [addExpense, {isLoading}] = useAddExpensesMutation();
 
   const handleGoback = () => {
     navigation.goBack();
@@ -93,6 +127,48 @@ const AddExpenses = ({navigation}: any) => {
       },
     );
   }, [monthName, year]);
+
+  const handleSubmit = async () => {
+    try {
+      const payload = {
+        serviceType: selectedExpense,
+        customServiceType: selectedExpense === 'OTHER' ? expenseName : '',
+        serviceProviderName,
+        contactNumber,
+        amountPaid,
+        image: selectedPaymentReceipt,
+      };
+      console.log('Expense payload:', payload);
+
+      const response = await addExpense(payload).unwrap();
+
+      console.log('Expense response:', response);
+
+      setModalConfig({
+        type: 'success',
+        title: 'Expense Added',
+        message: 'Expense for ' + monthName + ' ' + year + ' was added successfully',
+      });
+      showStatusModal();
+    } catch (error: any) {
+      console.log('Add Expense Error:', error);
+      setModalConfig({
+        type: 'error',
+        title: 'Failed',
+        message:
+          error?.data?.message || 'Unable to add expense. Please try again.',
+      });
+      showStatusModal();
+    }
+  };
+
+  const closeStatusModal = () => {
+    dismissStatusModal();
+    if (modalConfig.type === 'success') {
+      navigation.goBack();
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={{flex: 1, backgroundColor: '#F8F8F8'}}
@@ -117,13 +193,28 @@ const AddExpenses = ({navigation}: any) => {
                 data={expenseOptions}
                 selectedValue={selectedExpense}
                 placeholder="Select Expense"
-                onSelect={item => setSelectedExpense(item.label)}
+                onSelect={item => setSelectedExpense(item.value)}
               />
             </View>
+
+            {selectedExpense === 'OTHER' && (
+              <>
+                <Label>Expense Name</Label>
+                <TextInput
+                  placeholder="Enter Expense"
+                  value={expenseName}
+                  onChangeText={setExpenseName}
+                  activeOutlineColor="#E9E9E9"
+                  style={{marginBottom: 12}}
+                />
+              </>
+            )}
 
             <Label>Service Provider Name</Label>
             <TextInput
               placeholder="Enter Name"
+              value={serviceProviderName}
+              onChangeText={setServiceProviderName}
               activeOutlineColor="#E9E9E9"
               style={{marginBottom: 12}}
             />
@@ -131,6 +222,8 @@ const AddExpenses = ({navigation}: any) => {
             <Label>Contact Number</Label>
             <TextInput
               placeholder="Contact Number"
+              value={contactNumber}
+              onChangeText={setContactNumber}
               activeOutlineColor="#E9E9E9"
               style={{marginBottom: 12}}
               keyboardType="phone-pad"
@@ -139,6 +232,8 @@ const AddExpenses = ({navigation}: any) => {
             <Label>Amount Paid</Label>
             <TextInput
               placeholder="Amount Paid (₹)"
+              value={amountPaid}
+              onChangeText={setAmountPaid}
               activeOutlineColor="#E9E9E9"
               style={{marginBottom: 12}}
               keyboardType="numeric"
@@ -162,7 +257,10 @@ const AddExpenses = ({navigation}: any) => {
         </ScrollView>
       </TouchableWithoutFeedback>
       <StyledButton>
-        <Button mode="contained" onPress={handleGoback}>
+        <Button
+          mode="contained"
+          onPress={handleSubmit}
+          disabled={!isFormValid || isLoading}>
           <ButtonTitle>SUBMIT</ButtonTitle>
         </Button>
       </StyledButton>
@@ -173,6 +271,18 @@ const AddExpenses = ({navigation}: any) => {
         uploadedImageUri={selectedPaymentReceipt?.uri}
         uploadedImageName={selectedPaymentReceipt?.name}
       />
+      <StatusModal
+        visible={isStatusVisible}
+        type={modalConfig.type}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        onClose={closeStatusModal}
+      />
+      {isLoading && (
+        <Overlay>
+          <ActivityIndicator />
+        </Overlay>
+      )}
     </KeyboardAvoidingView>
   );
 };

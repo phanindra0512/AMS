@@ -11,32 +11,45 @@ import CollectionStatus from './components/CollectionStatus';
 import Transactions from './components/Transaction';
 import {useModal} from '../../../utils/useModal';
 import {getMonthYear, MONTHS} from '../../../utils/useGetMonthYear';
-import {useGetPaymentsByMonthYearQuery} from '../../../api/services/maintenance';
+import {
+  useGetPaymentsByMonthYearQuery,
+  useGetTreasurerAmountQuery,
+} from '../../../api/services/maintenance';
 import {Overlay} from '../../../common/styles/commonStyles';
 
 const ViewCollection = ({navigation}: any) => {
   const {isVisible, showModal, dismissModal} = useModal();
   const [selectedMonth, setSelectedMonth] = useState(getMonthYear().monthName);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [isTreasurerLoading, setIsTreasurerLoading] = useState(false);
   const monthNumber = MONTHS.indexOf(selectedMonth) + 1;
 
   const {
     data: paymentsData,
     isLoading: isPaymentsLoading,
+    isFetching: isPaymentsFetching,
     refetch,
   } = useGetPaymentsByMonthYearQuery({
     month: monthNumber,
     year: selectedYear,
   });
+  const {
+    totalCollection = 0,
+    totalExpenses = 0,
+    totalPayments = 0,
+  } = paymentsData || {};
+
+  const {
+    data: treasurerData,
+    isLoading: isTreasurerDataLoading,
+    isFetching: isTreasurerFetching,
+  } = useGetTreasurerAmountQuery();
+
+  const {treasurerAmount = 0} = treasurerData || {};
 
   const handleGoback = () => {
     navigation.goBack();
   };
-
-  const TOTAL_TREASURE_AMOUNT = 9000;
-  const TOTAL_COLLECTION_AMOUNT = paymentsData?.totalAmount;
-  const EXPENSES_AMOUNT = 0;
-  const TOTAL_PAYMENTS = paymentsData?.totalPayments || 0;
 
   return (
     <>
@@ -48,12 +61,13 @@ const ViewCollection = ({navigation}: any) => {
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
           onPress={showModal}
+          onLoadingChange={setIsTreasurerLoading}
         />
         <CollectionStatus
-          totalTreasureAmount={TOTAL_TREASURE_AMOUNT}
-          totalCollectionAmount={TOTAL_COLLECTION_AMOUNT}
-          expensesAmount={EXPENSES_AMOUNT}
-          totalPayments={TOTAL_PAYMENTS}
+          totalTreasureAmount={treasurerAmount}
+          totalCollectionAmount={totalCollection}
+          expensesAmount={totalExpenses}
+          totalPayments={totalPayments}
         />
         {isPaymentsLoading ? null : paymentsData?.data.length === 0 ? (
           <NoTransactionContainer>
@@ -72,7 +86,11 @@ const ViewCollection = ({navigation}: any) => {
           setSelectedYear={setSelectedYear}
         />
       </View>
-      {isPaymentsLoading && (
+      {(isPaymentsLoading ||
+        isPaymentsFetching ||
+        isTreasurerLoading ||
+        isTreasurerDataLoading ||
+        isTreasurerFetching) && (
         <Overlay>
           <ActivityIndicator />
         </Overlay>

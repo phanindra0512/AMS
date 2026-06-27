@@ -15,13 +15,15 @@ export interface Payment {
   flatNumber: string;
   ownerName: string;
   receiptUrl: string;
+  ownerId: number;
 }
 
 export interface PaymentsResponse {
   success: boolean;
   ownerId: string;
   totalPayments: number;
-  totalAmount: number;
+  totalCollection: number;
+  totalExpenses: number;
   data: Payment[];
 }
 
@@ -32,4 +34,11 @@ export interface ProcessedPayment {
   date: string;
   status: string;
   monthYear: string;
+}
+
+export interface TreasurerAmountResponse {
+  success: boolean;
+  totalCollection: number;
+  totalExpenses: number;
+  treasurerAmount: number;
 }

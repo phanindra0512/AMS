@@ -8,22 +8,25 @@ import {
   ImageContainer,
   SubHeaderText,
 } from '../styles';
-import { GlobalStore } from '../../../../storage/stores';
+import {GlobalStore} from '../../../../storage/stores';
+import {TreasurerAmountResponse} from '../../../../types/payment';
 
 interface HeaderProps {
   handleNavigation: () => void;
+  treasurerData?: TreasurerAmountResponse;
 }
 
-const Header: React.FC<HeaderProps> = ({handleNavigation}) => {
- const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
-
-console.log('Owner Details:', OwnerDetails);
+const Header: React.FC<HeaderProps> = ({handleNavigation, treasurerData}) => {
+  const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
+console.log("OwnerDetails ---> ",OwnerDetails);
 
   return (
     <HeaderContainer>
       <View>
         <HeaderText>Hi {OwnerDetails?.name}!</HeaderText>
-        <SubHeaderText>Flat No: {OwnerDetails?.flatNumber}, {OwnerDetails?.role}</SubHeaderText>
+        <SubHeaderText>
+          Flat No: {OwnerDetails?.flatNumber}, {OwnerDetails?.role}
+        </SubHeaderText>
       </View>
 
       <BalanceAmountContainer onPress={handleNavigation}>
@@ -36,7 +39,9 @@ console.log('Owner Details:', OwnerDetails);
               resizeMode: 'contain',
             }}
           />
-          <BalanceAmount>₹ 10,000</BalanceAmount>
+          <BalanceAmount>
+            ₹ {treasurerData?.treasurerAmount?.toLocaleString()}
+          </BalanceAmount>
         </ImageContainer>
       </BalanceAmountContainer>
     </HeaderContainer>

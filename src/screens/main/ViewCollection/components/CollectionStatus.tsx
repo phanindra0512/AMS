@@ -24,6 +24,7 @@ const CollectionStatus = ({
   expensesAmount,
   totalPayments,
 }: any) => {
+  
   return (
     <View>
       <BackgroundContainer>
@@ -41,7 +42,7 @@ const CollectionStatus = ({
         <BalanceAmountContainer>
           <SubText>Balance Amount</SubText>
           <Amount>
-            ₹ {totalCollectionAmount - expensesAmount?.toLocaleString()}
+            ₹ {((totalCollectionAmount ?? 0) - (expensesAmount ?? 0)).toLocaleString('en-IN')}
           </Amount>
         </BalanceAmountContainer>
       </AmountContainer>
@@ -63,7 +64,7 @@ const CollectionStatus = ({
         <StatusBox>
           <ColorDot color="#FB8C00" />
           <StatusText>
-            Collected : ₹{totalCollectionAmount?.toLocaleString()}
+            Collected : ₹{(totalCollectionAmount ?? 0).toLocaleString('en-IN')}
           </StatusText>
         </StatusBox>
 

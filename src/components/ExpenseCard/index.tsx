@@ -13,48 +13,53 @@ import {
 } from './styles';
 import {ExpenseIcon} from '../../assets/svg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
-interface ExpenseCardProps {
-  title: string;
-  name: string;
-  phone: string;
-  amount: string;
-  date: string;
-  paidBy: string;
-  userRole: string | undefined;
-}
+import {Expense} from '../../types/expenses';
+import {formatDateWithYear} from '../../utils/useGetMonthYear';
+import {toTitleCase} from '../../utils/toTitleCase';
+import {TouchableOpacity} from 'react-native';
 
 const ExpenseCard = ({
-  title,
-  name,
-  phone,
-  amount,
-  date,
-  paidBy,
+  data,
   userRole,
-}: ExpenseCardProps) => {
+  onView,
+}: {
+  data: Expense;
+  userRole?: string;
+  onView: () => void;
+}) => {
+  const {
+    serviceType,
+    serviceProviderName,
+    contactNumber,
+    amountPaid,
+    createdAt,
+    treasurer,
+  } = data;
+
   return (
     <CardWrapper>
       <Row>
         <Left>
           <TitleRow>
             <ExpenseIcon />
-            <TitleText>{title}</TitleText>
+            <TitleText>{toTitleCase(serviceType)}</TitleText>
           </TitleRow>
           <SubText>
-            {name}, {phone}
+            {serviceProviderName}, {contactNumber}
           </SubText>
-          <SubText>Paid : ₹ {amount}</SubText>
+          <SubText>Paid : ₹ {amountPaid.toLocaleString('en-IN')}</SubText>
         </Left>
 
         <Right>
-          <DateText>{date}</DateText>
-          <PaidByText>Paid By : {paidBy}</PaidByText>
+          <DateText>{formatDateWithYear(createdAt)}</DateText>
+          <PaidByText>Paid By : {treasurer?.treasurerName}</PaidByText>
         </Right>
       </Row>
 
       <FloatingActionButton>
-        <MaterialIcons name="remove-red-eye" size={18} color={'#FFF'} />
+        <TouchableOpacity onPress={onView}>
+          <MaterialIcons name="remove-red-eye" size={18} color={'#FFF'} />
+        </TouchableOpacity>
         {userRole === 'TREASURER' && (
           <MaterialIcons name="delete" size={18} color={'#FFF'} />
         )}

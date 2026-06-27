@@ -44,7 +44,6 @@ const StatusModal = ({
   return (
     <Modal
       isVisible={visible}
-      onBackdropPress={onClose}
       style={{justifyContent: 'center', marginHorizontal: 20}}>
       <ModalContainer>
         <Image

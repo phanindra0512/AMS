@@ -19,7 +19,7 @@ export const Left = styled.View`
 `;
 
 export const Right = styled.View`
-  align-items: flex-start;
+  align-items: flex-end;
 `;
 
 export const TitleRow = styled.View`

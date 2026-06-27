@@ -21,7 +21,7 @@ const PaymentApproval = ({navigation}: any) => {
     showModal: showPaymentReceiptModal,
     dismissModal: dismissPaymentReceiptModal,
   } = useModal();
-
+  const [isTreasurerLoading, setIsTreasurerLoading] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(getMonthYear().monthName);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedPaymentReceipt, setSelectedPaymentReceipt] = useState<{
@@ -49,69 +49,73 @@ const PaymentApproval = ({navigation}: any) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <Header handleBack={handleGoback}>
-        <HeaderText>Payment Approval</HeaderText>
-      </Header>
-      <Calendar
-        selectedMonth={selectedMonth}
-        selectedYear={selectedYear}
-        onPress={showModal}
-      />
-      <View style={{flex: 1, padding: 16}}>
-        {isPaymentsLoading ? (
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator />
-          </View>
-        ) : paymentsData?.data && paymentsData.data.length > 0 ? (
-          <FlatList
-            data={paymentsData.data}
-            keyExtractor={item => item._id}
-            renderItem={({item}) => (
-              <PaymentCard
-                item={item}
-                onViewBill={(receiptUrl: string) => {
-                  setSelectedPaymentReceipt({
-                    uri: receiptUrl,
-                    name: `Receipt - Flat ${item.flatNumber}`,
-                  });
-                  showPaymentReceiptModal();
-                }}
-                onApprovalComplete={handleApprovalComplete}
-              />
-            )}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text
-              style={{
-                fontSize: 16,
-                color: '#757575',
-                fontFamily: 'JosefinSans-Regular',
-              }}>
-              No transactions available
-            </Text>
-          </View>
-        )}
-      </View>
-      <SelectMonth
-        isVisible={isVisible}
-        dismissModal={dismissModal}
-        selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
-      />
+    <>
+      <View style={{flex: 1}}>
+        <Header handleBack={handleGoback}>
+          <HeaderText>Payment Approval</HeaderText>
+        </Header>
+        <Calendar
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          onPress={showModal}
+          onLoadingChange={setIsTreasurerLoading}
+        />
+        <View style={{flex: 1, padding: 16}}>
+          {isPaymentsLoading ? null : paymentsData?.data &&
+            paymentsData.data.length > 0 ? (
+            <FlatList
+              data={paymentsData.data}
+              keyExtractor={item => item._id}
+              renderItem={({item}) => (
+                <PaymentCard
+                  item={item}
+                  onViewBill={(receiptUrl: string) => {
+                    setSelectedPaymentReceipt({
+                      uri: receiptUrl,
+                      name: `Receipt - Flat ${item.flatNumber}`,
+                    });
+                    showPaymentReceiptModal();
+                  }}
+                  onApprovalComplete={handleApprovalComplete}
+                />
+              )}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <View
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: '#757575',
+                  fontFamily: 'JosefinSans-Regular',
+                }}>
+                No transactions available
+              </Text>
+            </View>
+          )}
+        </View>
+        <SelectMonth
+          isVisible={isVisible}
+          dismissModal={dismissModal}
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+        />
 
-      <MaintenanceBillDetails
-        isVisible={isShowPaymentReceipt}
-        dismissModal={dismissPaymentReceiptModal}
-        uploadedImageUri={selectedPaymentReceipt?.uri}
-      />
-    </View>
+        <MaintenanceBillDetails
+          isVisible={isShowPaymentReceipt}
+          dismissModal={dismissPaymentReceiptModal}
+          uploadedImageUri={selectedPaymentReceipt?.uri}
+        />
+      </View>
+      {(isPaymentsLoading || isTreasurerLoading) && (
+        <Overlay>
+          <ActivityIndicator />
+        </Overlay>
+      )}
+    </>
   );
 };
 
