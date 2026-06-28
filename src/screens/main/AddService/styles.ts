@@ -10,7 +10,6 @@ export const Title = styled.Text`
   font-family: JosefinSans-SemiBold;
   color: #1b1b1b;
   line-height: 18px;
-  padding-left: 24px;
   padding-top: 24px;
   padding-bottom: 4px;
 `;
@@ -19,7 +18,6 @@ export const SubTitle = styled.Text`
   font-family: JosefinSans-Regular;
   color: #313131;
   line-height: 12px;
-  padding-horizontal: 24px;
   padding-bottom: 16px;
 `;
 export const Label = styled.Text`
@@ -27,7 +25,6 @@ export const Label = styled.Text`
   color: #747476;
   margin-bottom: 4px;
   font-family: JosefinSans-Regular;
-  padding-left: 24px;
 `;
 export const StyledButton = styled.View`
   justify-content: center;

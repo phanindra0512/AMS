@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList, View, Linking} from 'react-native';
 import {
   TitleText,
   Avatar,
@@ -54,10 +54,10 @@ const CallCommittee = ({navigation}: any) => {
 
       {expandedId === item._id && (
         <IconRow>
-          <IconWrapper onPress={() => console.log('Call', item.phone)}>
+          <IconWrapper onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}>
             <CallIcon />
           </IconWrapper>
-          <IconWrapper onPress={() => console.log('Message', item.phone)}>
+          <IconWrapper onPress={() => console.log('Message', item.phoneNumber)}>
             <MessageIcon />
           </IconWrapper>
           <IconWrapper onPress={() => handleInfoDetails(item)}>

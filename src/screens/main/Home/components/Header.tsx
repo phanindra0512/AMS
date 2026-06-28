@@ -18,7 +18,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({handleNavigation, treasurerData}) => {
   const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
-console.log("OwnerDetails ---> ",OwnerDetails);
+  console.log('OwnerDetails ---> ', OwnerDetails);
 
   return (
     <HeaderContainer>
@@ -29,21 +29,23 @@ console.log("OwnerDetails ---> ",OwnerDetails);
         </SubHeaderText>
       </View>
 
-      <BalanceAmountContainer onPress={handleNavigation}>
-        <ImageContainer>
-          <Image
-            source={require('../../../../assets/images/amountBag.png')}
-            style={{
-              width: 35,
-              height: 35,
-              resizeMode: 'contain',
-            }}
-          />
-          <BalanceAmount>
-            ₹ {treasurerData?.treasurerAmount?.toLocaleString()}
-          </BalanceAmount>
-        </ImageContainer>
-      </BalanceAmountContainer>
+      {treasurerData && (
+        <BalanceAmountContainer onPress={handleNavigation}>
+          <ImageContainer>
+            <Image
+              source={require('../../../../assets/images/amountBag.png')}
+              style={{
+                width: 35,
+                height: 35,
+                resizeMode: 'contain',
+              }}
+            />
+            <BalanceAmount>
+              ₹ {treasurerData?.treasurerAmount?.toLocaleString()}
+            </BalanceAmount>
+          </ImageContainer>
+        </BalanceAmountContainer>
+      )}
     </HeaderContainer>
   );
 };

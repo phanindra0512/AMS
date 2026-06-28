@@ -44,8 +44,11 @@ export const InfoRow = styled.View`
   margin-top: 6px;
 `;
 
-export const CallService = styled(InfoRow)`
+export const CallService = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
   justify-content: center;
+  margin-top: 6px;
   padding-bottom: 4px;
 `;
 
