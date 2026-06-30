@@ -12,15 +12,14 @@ import Header from './components/Header';
 import {Image, FlatList} from 'react-native';
 import {SERVICES} from '../../../constants/services';
 import GlobalStorage from '../../../storage';
-import {ActivityIndicator, TreasureModal} from '../../../components';
+import {TreasureModal} from '../../../components';
 import {useModal} from '../../../utils/useModal';
 import {
   useGetPaymentsByMonthYearQuery,
   useGetTreasurerAmountQuery,
 } from '../../../api/services/maintenance';
-import {Overlay} from '../../../common/styles/commonStyles';
 import {getMonthYear, MONTHS} from '../../../utils/useGetMonthYear';
-import { PaymentStatusEnum } from '../../../constants/paymentStatus';
+import {PaymentStatusEnum} from '../../../constants/paymentStatus';
 
 const Home = ({navigation}: any) => {
   const getMonthName = getMonthYear().monthName;
@@ -54,14 +53,11 @@ const Home = ({navigation}: any) => {
   const userRole = owner?.role;
   const userId = owner?._id;
 
- const myPayment = useMemo(() => {
-  return paymentsData?.data?.find(
-    payment => payment.ownerId === userId,
-  );
-}, [paymentsData, userId]);
+  const myPayment = useMemo(() => {
+    return paymentsData?.data?.find(payment => payment.ownerId === userId);
+  }, [paymentsData, userId]);
 
-const paymentStatus =
-  myPayment?.paymentStatus ?? PaymentStatusEnum.PENDING;
+  const paymentStatus = myPayment?.paymentStatus ?? PaymentStatusEnum.PENDING;
 
   const filteredServices = useMemo(() => {
     return SERVICES.filter(
@@ -78,7 +74,7 @@ const paymentStatus =
       navigation.navigate('PayMaintenance');
     } else if (paymentStatus === PaymentStatusEnum.APPROVED) {
       navigation.navigate('ViewReceipts');
-    }  else {
+    } else {
       console.warn('Payment status not recognized.');
     }
   };
@@ -155,12 +151,6 @@ const paymentStatus =
           treasurerData={treasurerData}
         />
       </Container>
-
-      {(isTreasurerDataLoading || isTreasurerFetching || isPaymentsLoading || isPaymentsFetching) && (
-        <Overlay>
-          <ActivityIndicator />
-        </Overlay>
-      )}
     </>
   );
 };
