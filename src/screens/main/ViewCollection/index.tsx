@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {
   Header,
   SelectMonth,
@@ -69,13 +69,15 @@ const ViewCollection = ({navigation}: any) => {
           expensesAmount={totalExpenses}
           totalPayments={totalPayments}
         />
-        {isPaymentsLoading ? null : paymentsData?.data.length === 0 ? (
-          <NoTransactionContainer>
-            <Label>No Transaction Found</Label>
-          </NoTransactionContainer>
-        ) : (
-          <Transactions transactions={paymentsData?.data || []} />
-        )}
+        <ScrollView>
+          {isPaymentsLoading ? null : paymentsData?.data.length === 0 ? (
+            <NoTransactionContainer>
+              <Label>No Transaction Found</Label>
+            </NoTransactionContainer>
+          ) : (
+            <Transactions transactions={paymentsData?.data || []} />
+          )}
+        </ScrollView>
 
         <SelectMonth
           isVisible={isVisible}

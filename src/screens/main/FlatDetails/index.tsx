@@ -20,7 +20,9 @@ import {
 
 const FlatDetails = ({navigation}: any) => {
   const {data, isLoading, error} = useGetAllOwnersQuery();
-  const owners = data || [];
+  const owners = (data || []).filter(
+    owner => owner.role === 'TREASURER' || owner.role === 'RESIDENT',
+  );
   const handleGoback = () => {
     navigation.goBack();
   };

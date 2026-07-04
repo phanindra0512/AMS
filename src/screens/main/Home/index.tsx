@@ -74,6 +74,8 @@ const Home = ({navigation}: any) => {
       navigation.navigate('PayMaintenance');
     } else if (paymentStatus === PaymentStatusEnum.APPROVED) {
       navigation.navigate('ViewReceipts');
+    } else if (paymentStatus === PaymentStatusEnum.REJECTED) {
+      navigation.navigate('PayMaintenance');
     } else {
       console.warn('Payment status not recognized.');
     }

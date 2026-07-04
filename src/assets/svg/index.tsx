@@ -41,6 +41,7 @@ import UserFilled from './user-filled.svg';
 import UserOutlined from './user-outlined.svg';
 import ServiceHubFilled from './service-hub-filled.svg';
 import ServiceHubOutlined from './service-hub-outlined.svg';
+import Error from './error.svg';
 
 export {
   ActivateSmartLock,
@@ -86,4 +87,5 @@ export {
   UserOutlined,
   ServiceHubFilled,
   ServiceHubOutlined,
+  Error,
 };

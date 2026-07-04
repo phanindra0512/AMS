@@ -223,6 +223,7 @@ const AddExpenses = ({navigation}: any) => {
             <TextInput
               placeholder="Contact Number"
               value={contactNumber}
+              maxLength={10}
               onChangeText={setContactNumber}
               activeOutlineColor="#E9E9E9"
               style={{marginBottom: 12}}

@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {
   AmountText,
   ButtonRow,
@@ -14,9 +15,11 @@ import {useApprovePaymentMutation} from '../../../../api/services/maintenance';
 export const PaymentCard = ({item, onViewBill, onApprovalComplete}: any) => {
   const isApproved = item.paymentStatus === 'APPROVED';
   const isRejected = item.paymentStatus === 'REJECTED';
-  const [approvePayment, {isLoading}] = useApprovePaymentMutation();
+  const [approvePayment] = useApprovePaymentMutation();
+  const [pendingAction, setPendingAction] = useState<'approve' | 'reject' | null>(null);
 
   const handleApprove = async () => {
+    setPendingAction('approve');
     try {
       await approvePayment({
         paymentId: item._id,
@@ -25,10 +28,13 @@ export const PaymentCard = ({item, onViewBill, onApprovalComplete}: any) => {
       onApprovalComplete?.();
     } catch (error) {
       console.log('Approval error:', error);
+    } finally {
+      setPendingAction(null);
     }
   };
 
   const handleReject = async () => {
+    setPendingAction('reject');
     try {
       await approvePayment({
         paymentId: item._id,
@@ -37,6 +43,8 @@ export const PaymentCard = ({item, onViewBill, onApprovalComplete}: any) => {
       onApprovalComplete?.();
     } catch (error) {
       console.log('Rejection error:', error);
+    } finally {
+      setPendingAction(null);
     }
   };
 
@@ -73,18 +81,22 @@ export const PaymentCard = ({item, onViewBill, onApprovalComplete}: any) => {
           <>
             <Button
               mode="outlined"
-              disabled={isLoading}
+              disabled={Boolean(pendingAction)}
               onPress={handleReject}
               style={{flex: 1}}>
-              <ButtonTitle>{isLoading ? 'Processing...' : 'Reject'}</ButtonTitle>
+              <ButtonTitle>
+                {pendingAction === 'reject' ? 'Processing...' : 'Reject'}
+              </ButtonTitle>
             </Button>
 
             <Button
               mode="contained"
-              disabled={isLoading}
+              disabled={Boolean(pendingAction)}
               onPress={handleApprove}
               style={{flex: 1}}>
-              <ButtonTitle>{isLoading ? 'Processing...' : 'Approve'}</ButtonTitle>
+              <ButtonTitle>
+                {pendingAction === 'approve' ? 'Processing...' : 'Approve'}
+              </ButtonTitle>
             </Button>
           </>
         )}

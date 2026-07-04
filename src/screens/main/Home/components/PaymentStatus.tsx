@@ -10,44 +10,52 @@ import {
   StyledButton,
   SubHeaderText,
 } from '../styles';
-import {Success, Warning} from '../../../../assets/svg';
+import {Success, Warning, Error} from '../../../../assets/svg';
 import {getMonthYear} from '../../../../utils/useGetMonthYear';
 import {MAINTENANCE_AMOUNT} from '../../../../constants/maintenance';
-
-enum PaymentStatusEnum {
-  PENDING = 'PENDING',
-  COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED',
-}
+import {PaymentStatusEnum} from '../../../../constants/paymentStatus';
 
 const PaymentStatus = ({paymentStatus, handleNavigation}: any) => {
   const getMonthName = getMonthYear().monthName;
   const yearNumber = new Date().getFullYear();
+  const isRejected = paymentStatus === PaymentStatusEnum.REJECTED;
+  const isPending = paymentStatus === PaymentStatusEnum.PENDING;
+
   return (
     <CardContainer>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <IconContainer bg="#FFFFFF">
-          {paymentStatus === PaymentStatusEnum.PENDING ? (
+          {isPending ? (
             <Warning />
+          ) : isRejected ? (
+            <Error />
           ) : (
             <Success />
           )}
         </IconContainer>
         <PaymentStatusText>
-          {paymentStatus === PaymentStatusEnum.PENDING
+          {isPending
             ? 'Payment Pending'
-            : 'Maintenance Paid'}
+            : isRejected
+              ? 'Payment Rejected'
+              : 'Maintenance Paid'}
         </PaymentStatusText>
       </View>
       <SubHeaderText color="#757575">
-        {paymentStatus === PaymentStatusEnum.PENDING
+        {isPending
           ? `Your maintenance fee of ₹${MAINTENANCE_AMOUNT.toLocaleString('en-IN')} for ${getMonthName} ${yearNumber} is pending.`
-          : `Your maintenance payment of ₹${MAINTENANCE_AMOUNT.toLocaleString('en-IN')} for ${getMonthName} ${yearNumber} has been received. Thank you!`}
+          : isRejected
+            ? `Your maintenance payment of ₹${MAINTENANCE_AMOUNT.toLocaleString('en-IN')} for ${getMonthName} ${yearNumber} was rejected by the treasurer.`
+            : `Your maintenance payment of ₹${MAINTENANCE_AMOUNT.toLocaleString('en-IN')} for ${getMonthName} ${yearNumber} has been received. Thank you!`}
       </SubHeaderText>
 
-      {paymentStatus === PaymentStatusEnum.PENDING ? (
+      {isPending ? (
         <StyledButton onPress={handleNavigation}>
           <ButtonTitle>Pay Now</ButtonTitle>
+        </StyledButton>
+      ) : isRejected ? (
+        <StyledButton onPress={handleNavigation}>
+          <ButtonTitle>Pay Again</ButtonTitle>
         </StyledButton>
       ) : (
         <OutlinedStyledButton onPress={handleNavigation}>

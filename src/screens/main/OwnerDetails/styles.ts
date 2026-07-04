@@ -93,3 +93,12 @@ export const Value = styled.Text`
   font-family: JosefinSans-Medium;
   text-align: right;
 `;
+
+export const LogoutText = styled.Text`
+  font-size: 16px;
+  font-family: JosefinSans-SemiBold;
+  color: #d32f2f;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  text-align: center;
+`;

@@ -1,5 +1,5 @@
-import React, {useCallback, useState} from 'react';
-import {Button, Header, TextInput} from '../../../components';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Button, Header, StatusModal, TextInput} from '../../../components';
 import {
   Container,
   DottedUploadBox,
@@ -35,7 +35,21 @@ const PayMaintenance = ({navigation}: any) => {
     name: string;
     type: string;
   } | null>(null);
+  const [statusModalConfig, setStatusModalConfig] = useState<{
+    type: 'success' | 'error';
+    title: string;
+    message: string;
+  }>({
+    type: 'success',
+    title: '',
+    message: '',
+  });
   const {isVisible, showModal, dismissModal} = useModal();
+  const {
+    isVisible: isStatusVisible,
+    showModal: showStatusModal,
+    dismissModal: dismissStatusModal,
+  } = useModal();
   const {day, month, monthName, year} = getMonthYear();
   const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
   const {flatNumber, name, phoneNumber} = OwnerDetails || {};
@@ -46,8 +60,61 @@ const PayMaintenance = ({navigation}: any) => {
   const [payMaintenance, {isLoading: isLoadingPayment}] =
     usePayMaintenanceMutation();
 
+  useEffect(() => {
+    if (error) {
+      setStatusModalConfig({
+        type: 'error',
+        title: 'Treasurer Not Assigned',
+        message:
+          (error as any)?.data?.message ||
+          'A treasurer has not been assigned for this month. Please contact admin',
+      });
+      showStatusModal();
+    }
+  }, [error]);
+
   const handleGoback = () => {
     navigation.goBack();
+  };
+
+  const handleCloseModal = () => {
+    dismissStatusModal();
+    const shouldGoBack =
+      statusModalConfig.type === 'error' &&
+      statusModalConfig.title === 'Treasurer Not Assigned' &&
+      !data?.data;
+
+    if (shouldGoBack) {
+      navigation.goBack();
+    }
+  };
+
+  const handleViewReceipt = () => {
+    dismissStatusModal();
+    navigation.navigate('ViewReceipts');
+  };
+
+  const getErrorMessage = (error: any) => {
+    const candidates = [
+      error?.data?.message,
+      error?.data?.error,
+      error?.data?.detail,
+      error?.response?.data?.message,
+      error?.response?.data?.error,
+      error?.response?.data?.detail,
+      error?.response?.data?.data?.message,
+      error?.response?.data?.data?.error,
+      error?.response?.data?.error?.message,
+      error?.message,
+    ];
+
+    for (const candidate of candidates) {
+      if (typeof candidate === 'string' && candidate.trim()) {
+        return candidate;
+      }
+    }
+
+    return 'Unable to submit payment. Please try again.';
   };
 
   const onImageGalleryClick = useCallback(() => {
@@ -104,8 +171,22 @@ const PayMaintenance = ({navigation}: any) => {
         receipt: selectedPaymentReceipt,
       }).unwrap();
       console.log('Payment Success:', response);
-    } catch (error) {
-      console.log(error);
+      setStatusModalConfig({
+        type: 'success',
+        title: 'Payment Successful',
+        message: 'Your maintenance payment was submitted successfully.',
+      });
+      showStatusModal();
+    } catch (error: any) {
+      console.log('error in pay maintenance api', error);
+      const errorMessage = getErrorMessage(error);
+
+      setStatusModalConfig({
+        type: 'error',
+        title: 'Payment Failed',
+        message: errorMessage,
+      });
+      showStatusModal();
     }
   };
 
@@ -124,7 +205,7 @@ const PayMaintenance = ({navigation}: any) => {
         <SectionTitle>Enter basic information</SectionTitle>
         <Label>Transaction Id</Label>
         <TextInput
-          placeholder="Enter Transaction Id"
+          placeholder="Enter 12 digits Transaction Id"
           activeOutlineColor="#E9E9E9"
           disabled={false}
           maxLength={12}
@@ -200,7 +281,10 @@ const PayMaintenance = ({navigation}: any) => {
           <Button
             mode="contained"
             disabled={
-              isLoading || !selectedPaymentReceipt || transactionId.length === 0
+              isLoading ||
+              !selectedPaymentReceipt ||
+              transactionId.length === 0 ||
+              !data
             }
             onPress={handleSubmit}>
             <ButtonTitle>SUBMIT</ButtonTitle>
@@ -213,8 +297,17 @@ const PayMaintenance = ({navigation}: any) => {
           uploadedImageUri={selectedPaymentReceipt?.uri}
           uploadedImageName={selectedPaymentReceipt?.name}
         />
+        <StatusModal
+          visible={isStatusVisible}
+          type={statusModalConfig.type}
+          title={statusModalConfig.title}
+          message={statusModalConfig.message}
+          onClose={handleCloseModal}
+          actionLabel={statusModalConfig.type === 'success' ? 'View Receipt' : undefined}
+          onActionPress={statusModalConfig.type === 'success' ? handleViewReceipt : undefined}
+        />
       </Container>
-      {isLoadingPayment && (
+      {(isLoading || isLoadingPayment) && (
         <Overlay>
           <ActivityIndicator />
         </Overlay>

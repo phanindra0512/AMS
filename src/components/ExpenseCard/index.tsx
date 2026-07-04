@@ -29,6 +29,7 @@ const ExpenseCard = ({
 }) => {
   const {
     serviceType,
+    customServiceType,
     serviceProviderName,
     contactNumber,
     amountPaid,
@@ -36,13 +37,18 @@ const ExpenseCard = ({
     treasurer,
   } = data;
 
+  const displayServiceName =
+    serviceType === 'OTHER' && customServiceType
+      ? customServiceType
+      : serviceType;
+
   return (
     <CardWrapper>
       <Row>
         <Left>
           <TitleRow>
             <ExpenseIcon />
-            <TitleText>{toTitleCase(serviceType)}</TitleText>
+            <TitleText>{toTitleCase(displayServiceName)}</TitleText>
           </TitleRow>
           <SubText>
             {serviceProviderName}, {contactNumber}

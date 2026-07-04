@@ -18,6 +18,8 @@ interface StatusModalProps {
   title?: string;
   message?: string;
   onClose: () => void;
+  actionLabel?: string;
+  onActionPress?: () => void;
 }
 
 const STATUS_CONFIG = {
@@ -39,6 +41,8 @@ const StatusModal = ({
   title,
   message,
   onClose,
+  actionLabel,
+  onActionPress,
 }: StatusModalProps) => {
   const config = STATUS_CONFIG[type];
   return (
@@ -61,11 +65,11 @@ const StatusModal = ({
         <StyledButton>
           <Button
             mode="contained"
-            onPress={onClose}
+            onPress={actionLabel && onActionPress ? onActionPress : onClose}
             style={{borderRadius: 100}}>
-            <ButtonTitle>Close</ButtonTitle>
+            <ButtonTitle>{actionLabel || 'Close'}</ButtonTitle>
           </Button>
-        </StyledButton> 
+        </StyledButton>
 
       </ModalContainer>
     </Modal>

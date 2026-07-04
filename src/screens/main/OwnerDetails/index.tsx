@@ -1,5 +1,5 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, {useState} from 'react';
+import {TouchableOpacity, View} from 'react-native';
 import {
   HeaderText,
   ImageBlock,
@@ -15,19 +15,37 @@ import {
   Label,
   Value,
   SectionText,
+  LogoutText,
 } from './styles';
 import {Header} from '../../../components';
+import ActivityIndicator from '../../../components/ActivityIndicator';
 import {CopyIcon, ProfileFill} from '../../../assets/svg';
 import {GlobalStore} from '../../../storage/stores';
+import GlobalStorage from '../../../storage';
 import {getInitials} from '../../../utils/getInitials';
+import {reset} from '../../../utils/navigationRef';
+import { Overlay } from '../../../common/styles/commonStyles';
 
 const OwnerDetails = ({navigation, route}: any) => {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const OwnerDetails =
     route?.params?.ownerData || GlobalStore.ownerInfo.getValue('ownerInfo');
+  const isProfileTabView = route?.name === 'Profile';
   const childrens = OwnerDetails?.familyDetails?.children || [];
   const childrenNames = childrens?.map((child: any) => child.name).join(', ');
   const handleGoback = () => {
     navigation.goBack();
+  };
+
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+    GlobalStore.userToken.delete();
+    GlobalStore.ownerInfo.delete();
+    GlobalStorage.clearAll();
+
+    setTimeout(() => {
+      reset('Login');
+    }, 3000);
   };
 
   return (
@@ -98,7 +116,19 @@ const OwnerDetails = ({navigation, route}: any) => {
             </Row>
           </CardContent>
         </Card>
+
+        {isProfileTabView && (
+          <TouchableOpacity onPress={handleLogout}>
+            <LogoutText>Logout</LogoutText>
+          </TouchableOpacity>
+        )}
       </Container>
+
+      {isLoggingOut && (
+        <Overlay>
+          <ActivityIndicator />
+        </Overlay>
+      )}
     </View>
   );
 };

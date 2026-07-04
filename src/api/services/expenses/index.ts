@@ -36,7 +36,7 @@ export const expensesService = apiService.injectEndpoints({
           },
         };
       },
-      invalidatesTags: ['Expenses'],
+      invalidatesTags: ['Expenses', 'Payments'],
     }),
     getExpensesByMonthYear: builder.query<
       ExpensesResponse,

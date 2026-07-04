@@ -25,7 +25,9 @@ import {getInitials} from '../../../utils/getInitials';
 
 const CallCommittee = ({navigation}: any) => {
   const {data, isLoading, error} = useGetAllOwnersQuery();
-  const owners = data || [];
+  const owners = (data || []).filter(
+    owner => owner.role === 'TREASURER' || owner.role === 'RESIDENT',
+  );
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleGoback = () => {
@@ -54,7 +56,8 @@ const CallCommittee = ({navigation}: any) => {
 
       {expandedId === item._id && (
         <IconRow>
-          <IconWrapper onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}>
+          <IconWrapper
+            onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}>
             <CallIcon />
           </IconWrapper>
           <IconWrapper onPress={() => console.log('Message', item.phoneNumber)}>
