@@ -7,6 +7,9 @@ import {
   Card,
   Container,
   Divider,
+  EmptyContainer,
+  EmptyDescription,
+  EmptyTitle,
   Fab,
   FabText,
   HeaderText,
@@ -56,35 +59,51 @@ const ServiceHub = ({navigation}: any) => {
         <Header>
           <HeaderText>Service Hub</HeaderText>
         </Header>
-        <ScrollView>
-          {Object.keys(groupedServices).map(category => (
-            <View key={category}>
-              <Section>
-                <Service />
-                <SectionTitle>{category}</SectionTitle>
-              </Section>
-              {groupedServices[category].map((item: any, index: any) => (
-                <Card key={index}>
-                  <Name>{item.serviceProviderName}</Name>
-                  <InfoRow>
-                    <Phone />
-                    <InfoText>{item.mobileNumber}</InfoText>
-                  </InfoRow>
-                  <InfoRow>
-                    <Location />
-                    <InfoText>{item.location}</InfoText>
-                  </InfoRow>
-                  <Divider />
 
-                  <CallService
-                    onPress={() => Linking.openURL(`tel:${item.mobileNumber}`)}>
-                    <CallFilled />
-                    <CallText>Call for Service</CallText>
-                  </CallService>
-                </Card>
-              ))}
-            </View>
-          ))}
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          {!isLoading && services.length === 0 ? (
+            <EmptyContainer>
+              <EmptyTitle>No Services Available</EmptyTitle>
+              <EmptyDescription>
+                There are no service providers available at the moment.
+              </EmptyDescription>
+            </EmptyContainer>
+          ) : (
+            Object.keys(groupedServices).map(category => (
+              <View key={category}>
+                <Section>
+                  <Service />
+                  <SectionTitle>{category}</SectionTitle>
+                </Section>
+
+                {groupedServices[category].map((item: any, index: number) => (
+                  <Card key={index}>
+                    <Name>{item.serviceProviderName}</Name>
+
+                    <InfoRow>
+                      <Phone />
+                      <InfoText>{item.mobileNumber}</InfoText>
+                    </InfoRow>
+
+                    <InfoRow>
+                      <Location />
+                      <InfoText>{item.location}</InfoText>
+                    </InfoRow>
+
+                    <Divider />
+
+                    <CallService
+                      onPress={() =>
+                        Linking.openURL(`tel:${item.mobileNumber}`)
+                      }>
+                      <CallFilled />
+                      <CallText>Call for Service</CallText>
+                    </CallService>
+                  </Card>
+                ))}
+              </View>
+            ))
+          )}
         </ScrollView>
         {userRole === 'TREASURER' && (
           <Fab onPress={handleNavigation}>

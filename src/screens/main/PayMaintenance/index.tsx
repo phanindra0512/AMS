@@ -36,7 +36,7 @@ const PayMaintenance = ({navigation}: any) => {
     type: string;
   } | null>(null);
   const [statusModalConfig, setStatusModalConfig] = useState<{
-    type: 'success' | 'error';
+    type: 'success' | 'error' | 'warning';
     title: string;
     message: string;
   }>({
@@ -52,7 +52,7 @@ const PayMaintenance = ({navigation}: any) => {
   } = useModal();
   const {day, month, monthName, year} = getMonthYear();
   const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
-  const {flatNumber, name, phoneNumber} = OwnerDetails || {};
+  const {flatNumber, name, phoneNumber, status} = OwnerDetails || {};
   const {data, isLoading, error} = useGetTreasurerDetailsQuery({
     month,
     year,
@@ -61,17 +61,31 @@ const PayMaintenance = ({navigation}: any) => {
     usePayMaintenanceMutation();
 
   useEffect(() => {
-    if (error) {
+    if (status === 'Rented') {
+      setStatusModalConfig({
+        type: 'warning',
+        title: 'Maintenance Payment Not Available',
+        message:
+          'Rented users cannot make maintenance payments. The flat owner is responsible for making the payment.',
+      });
+
+      showStatusModal();
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (error && status !== 'Rented') {
       setStatusModalConfig({
         type: 'error',
         title: 'Treasurer Not Assigned',
         message:
           (error as any)?.data?.message ||
-          'A treasurer has not been assigned for this month. Please contact admin',
+          'A treasurer has not been assigned for this month. Please contact admin.',
       });
+
       showStatusModal();
     }
-  }, [error]);
+  }, [error, status]);
 
   const handleGoback = () => {
     navigation.goBack();
@@ -80,9 +94,10 @@ const PayMaintenance = ({navigation}: any) => {
   const handleCloseModal = () => {
     dismissStatusModal();
     const shouldGoBack =
-      statusModalConfig.type === 'error' &&
-      statusModalConfig.title === 'Treasurer Not Assigned' &&
-      !data?.data;
+      status === 'Rented' ||
+      (statusModalConfig.type === 'error' &&
+        statusModalConfig.title === 'Treasurer Not Assigned' &&
+        !data?.data);
 
     if (shouldGoBack) {
       navigation.goBack();
@@ -303,8 +318,12 @@ const PayMaintenance = ({navigation}: any) => {
           title={statusModalConfig.title}
           message={statusModalConfig.message}
           onClose={handleCloseModal}
-          actionLabel={statusModalConfig.type === 'success' ? 'View Receipt' : undefined}
-          onActionPress={statusModalConfig.type === 'success' ? handleViewReceipt : undefined}
+          actionLabel={
+            statusModalConfig.type === 'success' ? 'View Receipt' : undefined
+          }
+          onActionPress={
+            statusModalConfig.type === 'success' ? handleViewReceipt : undefined
+          }
         />
       </Container>
       {(isLoading || isLoadingPayment) && (

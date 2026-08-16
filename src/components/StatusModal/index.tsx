@@ -10,7 +10,7 @@ import {
 import {Image} from 'react-native';
 import {Button} from '../Button';
 
-type StatusType = 'success' | 'error';
+type StatusType = 'success' | 'error' | 'warning';
 
 interface StatusModalProps {
   visible: boolean;
@@ -33,6 +33,11 @@ const STATUS_CONFIG = {
     defaultTitle: 'Payment Failed!',
     defaultMessage: 'Something went wrong. Please try again.',
   },
+  warning: {
+    image: require('../../assets/images/warning.png'),
+    defaultTitle: 'Payment Warning!',
+    defaultMessage: 'Please contact the flat owner for assistance.',
+  }
 };
 
 const StatusModal = ({

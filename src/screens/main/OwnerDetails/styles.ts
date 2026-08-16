@@ -102,3 +102,67 @@ export const LogoutText = styled.Text`
   margin-bottom: 16px;
   text-align: center;
 `;
+
+export const BadgeContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 1;
+`;
+
+export const Badge = styled.View<{type: string}>`
+  padding-horizontal: 10px;
+  padding-vertical: 5px;
+  border-radius: 8px;
+
+  background-color: ${({type}) => {
+    switch (type) {
+      case 'OWNER':
+        return '#E8F5E9';
+      case 'TENANT':
+        return '#E3F2FD';
+      case 'TREASURER':
+        return '#FFF3E0';
+      case 'ADMIN':
+        return '#F3E5F5';
+      default:
+        return '#F1F1F1';
+    }
+  }};
+`;
+
+export const BadgeText = styled.Text<{type: string}>`
+  font-size: 10px;
+  font-family: JosefinSans-Bold;
+
+  color: ${({type}) => {
+    switch (type) {
+      case 'OWNER':
+        return '#2E7D32';
+      case 'TENANT':
+        return '#1565C0';
+      case 'TREASURER':
+        return '#E65100';
+      case 'ADMIN':
+        return '#7B1FA2';
+      default:
+        return '#616161';
+    }
+  }};
+`;
+
+export const CopyHint = styled.Text`
+  font-size: 10px;
+  line-height: 12px;
+  color: #636b2f;
+  font-family: JosefinSans-Medium;
+  margin-top: 3px;
+`;
+export const PayIdContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background-color: #f1f3e8;
+`;

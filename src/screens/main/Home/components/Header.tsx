@@ -10,6 +10,7 @@ import {
 } from '../styles';
 import {GlobalStore} from '../../../../storage/stores';
 import {TreasurerAmountResponse} from '../../../../types/payment';
+import {Badge, BadgeText, BadgeContainer} from '../styles';
 
 interface HeaderProps {
   handleNavigation: () => void;
@@ -23,10 +24,17 @@ const Header: React.FC<HeaderProps> = ({handleNavigation, treasurerData}) => {
   return (
     <HeaderContainer>
       <View>
-        <HeaderText>Hi {OwnerDetails?.name}!</HeaderText>
-        <SubHeaderText>
-          Flat No: {OwnerDetails?.flatNumber}, {OwnerDetails?.role}
-        </SubHeaderText>
+        <HeaderText>Hi {OwnerDetails?.name}</HeaderText>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 4}}>
+          <SubHeaderText>Flat No: {OwnerDetails?.flatNumber}</SubHeaderText>
+          {OwnerDetails?.role && (
+            <View style={{marginLeft: 8}}>
+              <Badge type={OwnerDetails.role}>
+                <BadgeText type={OwnerDetails.role}>{OwnerDetails.role}</BadgeText>
+              </Badge>
+            </View>
+          )}
+        </View>
       </View>
 
       {treasurerData && (

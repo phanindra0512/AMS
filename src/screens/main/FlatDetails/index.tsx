@@ -3,6 +3,9 @@ import {SectionList, View} from 'react-native';
 import {Header, ActivityIndicator} from '../../../components';
 import {ChevronRight, Floor, Phone} from '../../../assets/svg';
 import {
+  Badge,
+  BadgeContainer,
+  BadgeText,
   Card,
   HeaderText,
   Left,
@@ -50,28 +53,46 @@ const FlatDetails = ({navigation}: any) => {
     },
   ].filter(section => section.data.length > 0);
 
-  const renderItem = ({item}: any) => (
-    <Card onPress={() => handleNavigation(item)}>
-      <Left>
-        <Title>
-          #{item.flatNumber}, {item.name}
-        </Title>
+  const renderItem = ({item}: any) => {
+    const memberType = item.status === 'Rented' ? 'TENANT' : 'OWNER';
+    return (
+      <Card onPress={() => handleNavigation(item)}>
+        <Left>
+          <Title>
+            #{item.flatNumber}, {item.name}
+          </Title>
 
-        <View style={{flexDirection: 'row'}}>
-          <Row>
-            <Phone />
-            <SubText>{item.phoneNumber}</SubText>
-          </Row>
+          <View style={{flexDirection: 'row'}}>
+            <Row>
+              <Phone />
+              <SubText>{item.phoneNumber}</SubText>
+            </Row>
 
-          <Row>
-            <Floor />
-            <SubText>Floor {item.floorNumber}</SubText>
-          </Row>
-        </View>
-      </Left>
-      <ChevronRight />
-    </Card>
-  );
+            <Row>
+              <Floor />
+              <SubText>Floor {item.floorNumber}</SubText>
+            </Row>
+          </View>
+          <BadgeContainer>
+            <Badge type={memberType}>
+              <BadgeText type={memberType}>
+                {memberType}
+              </BadgeText>
+            </Badge>
+
+            {(item.role === 'TREASURER' || item.role === 'ADMIN') && (
+              <Badge type={item.role}>
+                <BadgeText type={item.role}>
+                  {item.role}
+                </BadgeText>
+              </Badge>
+            )}
+          </BadgeContainer>
+        </Left>
+        <ChevronRight />
+      </Card>
+    );
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -80,9 +101,7 @@ const FlatDetails = ({navigation}: any) => {
       </Header>
 
       <View style={{flex: 1, marginTop: 16}}>
-        {isLoading ? (
-          null
-        ) : sections.length === 0 ? (
+        {isLoading ? null : sections.length === 0 ? (
           <NoDataContainer>
             <NoDataLabel>Owners not found</NoDataLabel>
           </NoDataContainer>

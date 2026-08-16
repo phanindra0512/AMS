@@ -55,6 +55,13 @@ export const CenterContainer = styled.View`
 export const InfoDetailsText = styled(InfoText)`
   color: #747476;
 `;
+export const CopyHint = styled.Text`
+  font-size: 12px;
+  color: #bdbdbd;
+  font-family: JosefinSans-Medium;
+  margin-top: 6px;
+  margin-left: 36px;
+`;
 export const Label = styled.Text`
   font-size: 12px;
   color: #747476;

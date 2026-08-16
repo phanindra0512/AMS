@@ -4,6 +4,7 @@ export const ModalContainer = styled.View`
   background-color: #ededed;
   border-radius: 16px;
   overflow: hidden;
+  padding: 12px;
 `;
 export const ModalTitle = styled.Text`
   font-size: 20px;

@@ -48,3 +48,57 @@ export const SubText = styled.Text`
   padding-left: 4px;
   font-family: JosefinSans-Regular;
 `;
+
+export const BadgeContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-top: 8px;
+  gap: 8px;
+`;
+
+export const Badge = styled.View<{type: string}>`
+  padding-horizontal: 10px;
+  padding-vertical: 5px;
+  border-radius: 8px;
+  background-color: ${({type}) => {
+    switch (type) {
+      case 'OWNER':
+        return '#E8F5E9';
+
+      case 'TENANT':
+        return '#E3F2FD';
+
+      case 'TREASURER':
+        return '#FFF3E0';
+
+      case 'ADMIN':
+        return '#F3E5F5';
+
+      default:
+        return '#F1F1F1';
+    }
+  }};
+`;
+
+export const BadgeText = styled.Text<{type: string}>`
+  font-size: 10px;
+  font-family: JosefinSans-Bold;
+  color: ${({type}) => {
+    switch (type) {
+      case 'OWNER':
+        return '#2E7D32';
+
+      case 'TENANT':
+        return '#1565C0';
+
+      case 'TREASURER':
+        return '#E65100';
+
+      case 'ADMIN':
+        return '#7B1FA2';
+
+      default:
+        return '#616161';
+    }
+  }};
+`;

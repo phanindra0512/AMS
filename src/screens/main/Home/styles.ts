@@ -23,6 +23,46 @@ export const SubHeaderText = styled.Text<{color?: string}>`
   line-height: 18px;
   padding-top: 4px;
 `;
+export const BadgeContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const Badge = styled.View<{type?: string}>`
+  padding-horizontal: 8px;
+  padding-vertical: 4px;
+  border-radius: 6px;
+  background-color: ${({type}) => {
+    switch (type) {
+      case 'RESIDENT':
+        return '#E8F5E9';
+      case 'TREASURER':
+        return '#FFF3E0';
+      case 'ADMIN':
+        return '#F3E5F5';
+      default:
+        return '#F1F1F1';
+    }
+  }};
+`;
+
+export const BadgeText = styled.Text<{type?: string}>`
+  font-size: 10px;
+  font-family: JosefinSans-Bold;
+  color: ${({type}) => {
+    switch (type) {
+      case 'RESIDENT':
+        return '#2E7D32';
+      case 'TREASURER':
+        return '#E65100';
+      case 'ADMIN':
+        return '#7B1FA2';
+      default:
+        return '#616161';
+    }
+  }};
+`;
 export const IconContainer = styled.Pressable<{bg?: string}>`
   align-items: center;
   justify-content: center;

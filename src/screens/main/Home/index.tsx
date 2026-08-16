@@ -52,12 +52,15 @@ const Home = ({navigation}: any) => {
   const owner = ownerInfo ? JSON.parse(ownerInfo) : null;
   const userRole = owner?.role;
   const userId = owner?._id;
+  const userStatus = owner?.status;
 
   const myPayment = useMemo(() => {
     return paymentsData?.data?.find(payment => payment.ownerId === userId);
   }, [paymentsData, userId]);
 
-  const paymentStatus = myPayment?.paymentStatus ?? PaymentStatusEnum.PENDING;
+  const paymentStatus =
+    (myPayment?.paymentStatus as PaymentStatusEnum) ??
+    PaymentStatusEnum.PENDING;
 
   const filteredServices = useMemo(() => {
     return SERVICES.filter(
@@ -120,7 +123,11 @@ const Home = ({navigation}: any) => {
         />
         <PaymentStatus
           paymentStatus={paymentStatus}
+          userStatus={userStatus}
           handleNavigation={handlePaymentNavigation}
+          handleNotifyOwner={() => {
+            // notification logic
+          }}
         />
         <ServicesContainer>
           <ServiceHeading>Resident Services</ServiceHeading>

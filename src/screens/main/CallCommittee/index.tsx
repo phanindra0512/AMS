@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FlatList, View, Linking} from 'react-native';
+import {FlatList, View, Linking, Alert, Platform} from 'react-native';
 import {
   TitleText,
   Avatar,
@@ -24,6 +24,7 @@ import {
 import {getInitials} from '../../../utils/getInitials';
 
 const CallCommittee = ({navigation}: any) => {
+  
   const {data, isLoading, error} = useGetAllOwnersQuery();
   const owners = (data || []).filter(
     owner => owner.role === 'TREASURER' || owner.role === 'RESIDENT',
@@ -34,8 +35,49 @@ const CallCommittee = ({navigation}: any) => {
     navigation.goBack();
   };
 
+  
+
   const handleInfoDetails = (owner: any) => {
     navigation.navigate('OwnerDetails', {ownerData: owner});
+  };
+
+  const handleOpenWhatsApp = async (owner: any) => {
+    // Prefer opening a private chat with the owner's phone number.
+    const rawNumber = (owner?.phoneNumber || '').replace(/[^0-9+]/g, '');
+    if (!rawNumber) {
+      Alert.alert('No phone', 'Owner phone number not available');
+      return;
+    }
+
+    if (rawNumber) {
+      // Ensure international format: if 10 digits, assume +91 (adjust if needed)
+      let phone = rawNumber;
+      const digitsOnly = rawNumber.replace(/[^0-9]/g, '');
+      if (digitsOnly.length === 10) {
+        phone = `91${digitsOnly}`; // change default country code if needed
+      } else if (rawNumber.startsWith('+')) {
+        phone = rawNumber.replace('+', '');
+      }
+
+      const urlScheme = `whatsapp://send?phone=${phone}`;
+      const webUrl = `https://wa.me/${phone}`;
+      try {
+        const canOpen = await Linking.canOpenURL(urlScheme);
+        if (canOpen) {
+          await Linking.openURL(urlScheme);
+          return;
+        }
+
+        await Linking.openURL(webUrl);
+        return;
+      } catch (err) {
+        console.warn('Unable to open private chat:', err);
+        Alert.alert('Unable to open WhatsApp', 'Please make sure WhatsApp is installed');
+        return;
+      }
+    }
+
+    
   };
 
   const handlePress = (id: string) => {
@@ -60,7 +102,7 @@ const CallCommittee = ({navigation}: any) => {
             onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}>
             <CallIcon />
           </IconWrapper>
-          <IconWrapper onPress={() => console.log('Message', item.phoneNumber)}>
+          <IconWrapper onPress={() => handleOpenWhatsApp(item)}>
             <MessageIcon />
           </IconWrapper>
           <IconWrapper onPress={() => handleInfoDetails(item)}>

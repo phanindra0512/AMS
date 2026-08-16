@@ -94,3 +94,27 @@ export const FabText = styled.Text`
   font-family: JosefinSans-Regular;
 
 `;
+
+export const EmptyContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+`;
+
+export const EmptyTitle = styled.Text`
+  font-size: 16px;
+  line-height: 20px;
+  font-family: JosefinSans-Bold;
+  color: #313131;
+  text-align: center;
+  margin-bottom: 8px;
+`;
+
+export const EmptyDescription = styled.Text`
+  font-size: 14px;
+  line-height: 18px;
+  font-family: JosefinSans-Regular;
+  color: #747476;
+  text-align: center;
+`;

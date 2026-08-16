@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {Alert, TouchableOpacity, View} from 'react-native';
 import {
   HeaderText,
   ImageBlock,
@@ -16,6 +16,11 @@ import {
   Value,
   SectionText,
   LogoutText,
+  BadgeContainer,
+  Badge,
+  BadgeText,
+  CopyHint,
+  PayIdContainer,
 } from './styles';
 import {Header} from '../../../components';
 import ActivityIndicator from '../../../components/ActivityIndicator';
@@ -24,7 +29,8 @@ import {GlobalStore} from '../../../storage/stores';
 import GlobalStorage from '../../../storage';
 import {getInitials} from '../../../utils/getInitials';
 import {reset} from '../../../utils/navigationRef';
-import { Overlay } from '../../../common/styles/commonStyles';
+import {Overlay} from '../../../common/styles/commonStyles';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const OwnerDetails = ({navigation, route}: any) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -33,6 +39,8 @@ const OwnerDetails = ({navigation, route}: any) => {
   const isProfileTabView = route?.name === 'Profile';
   const childrens = OwnerDetails?.familyDetails?.children || [];
   const childrenNames = childrens?.map((child: any) => child.name).join(', ');
+  const memberType = OwnerDetails?.status === 'Rented' ? 'TENANT' : 'OWNER';
+
   const handleGoback = () => {
     navigation.goBack();
   };
@@ -48,6 +56,16 @@ const OwnerDetails = ({navigation, route}: any) => {
     }, 3000);
   };
 
+  const handleCopyUPI = () => {
+    if (!OwnerDetails?.upiID) {
+      return;
+    }
+
+    Clipboard.setString(OwnerDetails.upiID);
+
+    // Alert.alert('Copied', 'UPI ID copied to clipboard.');
+  };
+
   return (
     <View style={{flex: 1}}>
       <Header handleBack={handleGoback}>
@@ -58,10 +76,17 @@ const OwnerDetails = ({navigation, route}: any) => {
           <ProfileText>{getInitials(OwnerDetails?.name)}</ProfileText>
         </ImageBlock>
         <ProfileName>{OwnerDetails?.name}</ProfileName>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <PayIdText>{OwnerDetails?.upiID}</PayIdText>
-          <CopyIcon />
-        </View>
+        <TouchableOpacity
+          onPress={handleCopyUPI}
+          activeOpacity={0.7}
+          style={{alignItems: 'center'}}>
+          <PayIdContainer>
+            <PayIdText>{OwnerDetails?.upiID}</PayIdText>
+            <CopyIcon />
+          </PayIdContainer>
+
+          <CopyHint>Tap to copy UPI ID</CopyHint>
+        </TouchableOpacity>
       </ProfileContainer>
 
       <Container>
@@ -87,8 +112,22 @@ const OwnerDetails = ({navigation, route}: any) => {
               <Value>{OwnerDetails?.flatType}</Value>
             </Row>
             <Row>
-              <Label>Status</Label>
-              <Value>{OwnerDetails?.status}</Value>
+              <Label>Member Type</Label>
+
+              <BadgeContainer>
+                <Badge type={memberType}>
+                  <BadgeText type={memberType}>{memberType}</BadgeText>
+                </Badge>
+
+                {(OwnerDetails?.role === 'TREASURER' ||
+                  OwnerDetails?.role === 'ADMIN') && (
+                  <Badge type={OwnerDetails.role}>
+                    <BadgeText type={OwnerDetails.role}>
+                      {OwnerDetails.role}
+                    </BadgeText>
+                  </Badge>
+                )}
+              </BadgeContainer>
             </Row>
             <Row>
               <Label>Occupation</Label>
