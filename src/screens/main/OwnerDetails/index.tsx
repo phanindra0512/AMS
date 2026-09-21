@@ -149,10 +149,10 @@ const OwnerDetails = ({navigation, route}: any) => {
               <Label>Childrens</Label>
               <Value>{childrenNames || 'N/A'}</Value>
             </Row>
-            <Row>
+            {/* <Row>
               <Label>Family Count</Label>
               <Value>{OwnerDetails?.familyDetails?.numberOfChildren}</Value>
-            </Row>
+            </Row> */}
           </CardContent>
         </Card>
 

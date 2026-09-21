@@ -21,7 +21,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {getMonthYear} from '../../../utils/useGetMonthYear';
 import {useGetTreasurerDetailsQuery} from '../../../api/services/treasurer';
 import {GlobalStore} from '../../../storage/stores';
-import {MAINTENANCE_AMOUNT, PAYMENT_TYPE} from '../../../constants/maintenance';
+import {PAYMENT_TYPE} from '../../../constants/maintenance';
 import MaintenanceBillDetails from '../../../components/MaintenanceBillDetails';
 import {useModal} from '../../../utils/useModal';
 import {usePayMaintenanceMutation} from '../../../api/services/maintenance';
@@ -30,6 +30,7 @@ import ActivityIndicator from '../../../components/ActivityIndicator';
 
 const PayMaintenance = ({navigation}: any) => {
   const [transactionId, setTransactionId] = useState('');
+  const [amount, setAmount] = useState('');
   const [selectedPaymentReceipt, setSelectedPaymentReceipt] = useState<{
     uri: string;
     name: string;
@@ -181,7 +182,7 @@ const PayMaintenance = ({navigation}: any) => {
         flatNumber,
         ownerName: name,
         ownerMobile: phoneNumber,
-        amount: MAINTENANCE_AMOUNT,
+        amount,
         paymentType: PAYMENT_TYPE,
         receipt: selectedPaymentReceipt,
       }).unwrap();
@@ -210,7 +211,16 @@ const PayMaintenance = ({navigation}: any) => {
       <Header handleBack={handleGoback}>
         <HeaderText>Pay Maintenance</HeaderText>
       </Header>
-      <Container>
+      <Container
+        scrollEnabled
+        nestedScrollEnabled
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        automaticallyAdjustKeyboardInsets
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: 120,
+        }}>
         <TreasurerDetails
           data={data?.data}
           month={monthName}
@@ -261,8 +271,10 @@ const PayMaintenance = ({navigation}: any) => {
           <Column>
             <Label>Amount</Label>
             <TextInput
-              value={MAINTENANCE_AMOUNT.toString()}
-              disabled={true}
+              value={amount}
+              placeholder="Enter amount"
+              keyboardType="decimal-pad"
+              onChangeText={setAmount}
               style={{marginBottom: 12}}
             />
           </Column>
@@ -299,6 +311,8 @@ const PayMaintenance = ({navigation}: any) => {
               isLoading ||
               !selectedPaymentReceipt ||
               transactionId.length === 0 ||
+              !amount ||
+              Number(amount) <= 0 ||
               !data
             }
             onPress={handleSubmit}>

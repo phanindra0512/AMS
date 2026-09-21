@@ -19,6 +19,8 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({handleNavigation, treasurerData}) => {
   const OwnerDetails = GlobalStore.ownerInfo.getValue('ownerInfo');
+  const displayRole =
+    OwnerDetails?.status === 'Rented' ? 'TENANT' : OwnerDetails?.role;
   console.log('OwnerDetails ---> ', OwnerDetails);
 
   return (
@@ -27,10 +29,10 @@ const Header: React.FC<HeaderProps> = ({handleNavigation, treasurerData}) => {
         <HeaderText>Hi {OwnerDetails?.name}</HeaderText>
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 4}}>
           <SubHeaderText>Flat No: {OwnerDetails?.flatNumber}</SubHeaderText>
-          {OwnerDetails?.role && (
+          {displayRole && (
             <View style={{marginLeft: 8}}>
-              <Badge type={OwnerDetails.role}>
-                <BadgeText type={OwnerDetails.role}>{OwnerDetails.role}</BadgeText>
+              <Badge type={displayRole}>
+                <BadgeText type={displayRole}>{displayRole}</BadgeText>
               </Badge>
             </View>
           )}

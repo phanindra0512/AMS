@@ -42,7 +42,7 @@ export const Badge = styled.View<{type?: string}>`
       case 'ADMIN':
         return '#F3E5F5';
       default:
-        return '#F1F1F1';
+        return '#E3F2FD';
     }
   }};
 `;
@@ -59,7 +59,7 @@ export const BadgeText = styled.Text<{type?: string}>`
       case 'ADMIN':
         return '#7B1FA2';
       default:
-        return '#616161';
+        return '#1565C0';
     }
   }};
 `;
