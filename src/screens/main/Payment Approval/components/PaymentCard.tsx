@@ -16,7 +16,9 @@ export const PaymentCard = ({item, onViewBill, onApprovalComplete}: any) => {
   const isApproved = item.paymentStatus === 'APPROVED';
   const isRejected = item.paymentStatus === 'REJECTED';
   const [approvePayment] = useApprovePaymentMutation();
-  const [pendingAction, setPendingAction] = useState<'approve' | 'reject' | null>(null);
+  const [pendingAction, setPendingAction] = useState<
+    'approve' | 'reject' | null
+  >(null);
 
   const handleApprove = async () => {
     setPendingAction('approve');
@@ -57,17 +59,20 @@ export const PaymentCard = ({item, onViewBill, onApprovalComplete}: any) => {
 
       <Row>
         <AmountText>Amount Paid : ₹{item.amount}</AmountText>
-        <LinkText onPress={() => onViewBill(item.receiptUrl)}>
-          View Bill
-        </LinkText>
+      </Row>
+
+      <Row>
+        <AmountText>Payment Type : {item.paymentType}</AmountText>
+        {item.paymentType === 'UPI' && item.receiptUrl && (
+          <LinkText onPress={() => onViewBill(item.receiptUrl)}>
+            View Bill
+          </LinkText>
+        )}
       </Row>
 
       <ButtonRow>
         {isApproved ? (
-          <Button
-            mode="contained"
-            disabled
-            style={{flex: 1}}>
+          <Button mode="contained" disabled style={{flex: 1}}>
             <ButtonTitle>Approved</ButtonTitle>
           </Button>
         ) : isRejected ? (

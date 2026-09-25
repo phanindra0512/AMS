@@ -1,5 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Button, Header, StatusModal, TextInput} from '../../../components';
+import {
+  Button,
+  DropdownField,
+  Header,
+  StatusModal,
+  TextInput,
+} from '../../../components';
 import {
   Container,
   DottedUploadBox,
@@ -21,7 +27,6 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {getMonthYear} from '../../../utils/useGetMonthYear';
 import {useGetTreasurerDetailsQuery} from '../../../api/services/treasurer';
 import {GlobalStore} from '../../../storage/stores';
-import {PAYMENT_TYPE} from '../../../constants/maintenance';
 import MaintenanceBillDetails from '../../../components/MaintenanceBillDetails';
 import {useModal} from '../../../utils/useModal';
 import {usePayMaintenanceMutation} from '../../../api/services/maintenance';
@@ -31,6 +36,7 @@ import ActivityIndicator from '../../../components/ActivityIndicator';
 const PayMaintenance = ({navigation}: any) => {
   const [transactionId, setTransactionId] = useState('');
   const [amount, setAmount] = useState('');
+  const [selectedPaymentType, setSelectedPaymentType] = useState('');
   const [selectedPaymentReceipt, setSelectedPaymentReceipt] = useState<{
     uri: string;
     name: string;
@@ -183,7 +189,7 @@ const PayMaintenance = ({navigation}: any) => {
         ownerName: name,
         ownerMobile: phoneNumber,
         amount,
-        paymentType: PAYMENT_TYPE,
+        paymentType: selectedPaymentType,
         receipt: selectedPaymentReceipt,
       }).unwrap();
       console.log('Payment Success:', response);
@@ -281,35 +287,46 @@ const PayMaintenance = ({navigation}: any) => {
 
           <Column>
             <Label>Payment Type</Label>
-            <TextInput
-              value={PAYMENT_TYPE}
-              disabled={true}
-              style={{marginBottom: 12}}
+            <DropdownField
+              data={[
+                {label: 'UPI', value: 'UPI'},
+                {label: 'CASH', value: 'CASH'},
+              ]}
+              selectedValue={selectedPaymentType}
+              placeholder="Select Payment"
+              onSelect={item => {
+                setSelectedPaymentType(item.value);
+                if (item.value === 'CASH') {
+                  setSelectedPaymentReceipt(null);
+                }
+              }}
             />
           </Column>
         </RowFields>
 
-        {!selectedPaymentReceipt ? (
-          <DottedUploadBox onPress={onImageGalleryClick}>
-            <Upload />
-            <InfoText>Please upload payment receipt here</InfoText>
-          </DottedUploadBox>
-        ) : (
-          <SuccessBlock>
-            <SuccessText>{selectedPaymentReceipt.name}</SuccessText>
-            <ActionsContainer>
-              <Eye onPress={showModal} />
-              <Close onPress={() => setSelectedPaymentReceipt(null)} />
-            </ActionsContainer>
-          </SuccessBlock>
-        )}
+        {selectedPaymentType === 'UPI' &&
+          (!selectedPaymentReceipt ? (
+            <DottedUploadBox onPress={onImageGalleryClick}>
+              <Upload />
+              <InfoText>Please upload payment receipt here</InfoText>
+            </DottedUploadBox>
+          ) : (
+            <SuccessBlock>
+              <SuccessText>{selectedPaymentReceipt.name}</SuccessText>
+              <ActionsContainer>
+                <Eye onPress={showModal} />
+                <Close onPress={() => setSelectedPaymentReceipt(null)} />
+              </ActionsContainer>
+            </SuccessBlock>
+          ))}
 
         <StyledButton>
           <Button
             mode="contained"
             disabled={
               isLoading ||
-              !selectedPaymentReceipt ||
+              !selectedPaymentType ||
+              (selectedPaymentType === 'UPI' && !selectedPaymentReceipt) ||
               transactionId.length === 0 ||
               !amount ||
               Number(amount) <= 0 ||

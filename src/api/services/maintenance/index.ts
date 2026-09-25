@@ -29,12 +29,13 @@ export const maintenanceService = apiService.injectEndpoints({
         formData.append('amount', amount);
         formData.append('paymentType', paymentType);
 
-        // File append
-        formData.append('receipt', {
-          uri: receipt.uri,
-          name: receipt.name,
-          type: receipt.type,
-        });
+        if (paymentType === 'UPI' && receipt) {
+          formData.append('receipt', {
+            uri: receipt.uri,
+            name: receipt.name,
+            type: receipt.type,
+          });
+        }
 
         return {
           url: 'api/maintenance/pay',
